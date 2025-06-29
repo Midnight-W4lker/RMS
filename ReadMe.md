@@ -1,9 +1,3 @@
----
-noteId: "cb18405054ea11f082705dbc4ab14f8f"
-tags: []
-
----
-
 # Retail Management System
 
 A web-based application built with Flask for managing retail operations, including products, customers, sales, and analytics.
