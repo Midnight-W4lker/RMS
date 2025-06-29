@@ -75,15 +75,16 @@ def add_product():
     return render_template("add_product.html")
 
 
-@app.route("/update_product/<int:product_id>", methods=["GET", "POST"])
+@app.route("/update_product/<product_id>", methods=["GET", "POST"])
 def update_product(product_id):
     product = Product.query.get_or_404(product_id)
     if request.method == "POST":
         product.name = request.form["name"]
-        product.price = request.form["price"]
-        product.quantity = request.form["quantity"]
+        product.price = float(request.form["price"])
+        product.stock_quantity = int(request.form["stock_quantity"])
+        product.description = request.form["description"]
         db.session.commit()
-        return redirect(url_for("list_products"))
+        return redirect(url_for("list_products"))  # or wherever you want to go after update
     return render_template("update_product.html", product=product)
 
 

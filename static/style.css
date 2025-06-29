@@ -165,6 +165,12 @@ form input:focus, form select:focus, form textarea:focus {
     background: #fff;
 }
 
+.Hero-h1{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 /* Hamburger Menu Styles */
 .hamburger {
     display: none;
