@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retail Management System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <nav>
+        <h1>Retail Management</h1>
+        <div class="hamburger" id="hamburger-menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <ul id="nav-links">
+            <li><a href="{{ url_for('index') }}">Home</a></li>
+            <li><a href="{{ url_for('add_product') }}">Add Product</a></li>
+            <li><a href="{{ url_for('list_products') }}">View Products</a></li>
+            <li><a href="{{ url_for('register_customer') }}">Register Customer</a></li>
+            <li><a href="{{ url_for('list_customers') }}">View Customers</a></li>
+            <li><a href="{{ url_for('process_sale') }}">Process Sale</a></li>
+            <li><a href="{{ url_for('reports') }}">Reports</a></li>
+        </ul>
+    </nav>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+    <script src="{{ url_for('static', filename='navbar.js') }}"></script>
+</body>
+</html>

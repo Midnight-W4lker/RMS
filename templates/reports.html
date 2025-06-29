@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Reports</h2>
+<h3>Products</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Product ID</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Price</th>
+            <th>Stock Quantity</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for product in products %}
+        <tr>
+            <td>{{ product.product_id }}</td>
+            <td>{{ product.name }}</td>
+            <td>{{ product.description }}</td>
+            <td>{{ product.price }}</td>
+            <td>{{ product.stock_quantity }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h3>Customers</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Customer ID</th>
+            <th>Name</th>
+            <th>Email</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for customer in customers %}
+        <tr>
+            <td>{{ customer.customer_id }}</td>
+            <td>{{ customer.name }}</td>
+            <td>{{ customer.email }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h3>Sales</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Sale ID</th>
+            <th>Product ID</th>
+            <th>Customer ID</th>
+            <th>Quantity</th>
+            <th>Total Price</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for sale in sales %}
+        <tr>
+            <td>{{ sale.sale_id }}</td>
+            <td>{{ sale.product_id }}</td>
+            <td>{{ sale.customer_id }}</td>
+            <td>{{ sale.quantity }}</td>
+            <td>{{ sale.total_price }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
