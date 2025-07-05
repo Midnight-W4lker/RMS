@@ -1,30 +1,41 @@
-body {
+/* body {
     font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
     margin: 0;
     padding: 0;
     background-color: #f4f4f4;
-}
+} */
 
-/* Reset some default styles */
+/* 
+    === BASE & RESET STYLES ===
+    Ensures consistent box-sizing and removes default margin/padding.
+*/
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
 }
 
+/* 
+    Sets the main font, background, and base color for the app.
+    Applies a subtle gradient for a modern look.
+*/
 body {
     font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
     background: linear-gradient(135deg, #f4f4f4 0%, #e9ecef 100%);
-    color: #222;
+    color: #23272f;
     min-height: 100vh;
     line-height: 1.6;
 }
 
-/* Navigation Bar */
+/* 
+    === NAVIGATION BAR ===
+    Styles the top navigation bar, including logo/title and menu links.
+    Sticky positioning keeps it visible on scroll.
+*/
 nav {
     background: #23272f;
     color: #fff;
-    padding: 1.5em 2em;
+    padding: 1.2em 2em;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -34,6 +45,9 @@ nav {
     z-index: 100;
 }
 
+/* 
+    Styles the navigation title/logo.
+*/
 nav h1 {
     margin: 0;
     font-size: 2em;
@@ -41,137 +55,49 @@ nav h1 {
     font-weight: 700;
 }
 
+/* 
+    Styles the navigation links container and individual links.
+    Adds spacing and hover effects for a modern UI.
+*/
 nav ul {
     list-style: none;
     display: flex;
     gap: 2em;
 }
-
-nav ul li {
-    display: inline-block;
-}
-
 nav ul li a {
     color: #fff;
     text-decoration: none;
     font-weight: 500;
     padding: 0.5em 1em;
     border-radius: 4px;
-    transition: background 0.2s;
+    transition: background 0.2s, color 0.2s;
+    position: relative;
 }
-
 nav ul li a:hover, nav ul li a:focus {
     background: #3a3f47;
+    color: #ffd700;
     outline: none;
 }
-
-/* Main Content */
-main {
-    padding: 2.5em 2em;
-    max-width: 1200px;
-    margin: 2em auto;
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+nav ul li a::after {
+    content: '';
+    display: block;
+    width: 0;
+    height: 2px;
+    background: #ffd700;
+    transition: width 0.3s;
+    position: absolute;
+    left: 0;
+    bottom: 0;
 }
-
-/* Table Styles */
-table {
+nav ul li a:hover::after, nav ul li a:focus::after {
     width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-    margin-top: 1.5em;
-    background: #fafbfc;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
 }
 
-th, td {
-    padding: 1em 1.2em;
-    text-align: left;
-}
-
-th {
-    background: #f1f3f6;
-    font-weight: 600;
-    color: #23272f;
-    border-bottom: 2px solid #e3e6ea;
-}
-
-tr:nth-child(even) td {
-    background: #f9fafb;
-}
-
-tr:hover td {
-    background: #f0f4f8;
-    transition: background 0.2s;
-}
-
-td, th {
-    border-bottom: 1px solid #e3e6ea;
-}
-
-tr:last-child td {
-    border-bottom: none;
-}
-
-/* Buttons */
-button, .btn {
-    background: linear-gradient(90deg, #23272f 0%, #3a3f47 100%);
-    color: #fff;
-    padding: 0.7em 1.5em;
-    border: none;
-    border-radius: 6px;
-    font-size: 1em;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background 0.2s, box-shadow 0.2s;
-    box-shadow: 0 2px 8px rgba(35,39,47,0.07);
-    margin-top: 1em;
-}
-
-button:hover, .btn:hover, button:focus, .btn:focus {
-    background: linear-gradient(90deg, #3a3f47 0%, #23272f 100%);
-    outline: none;
-}
-
-/* Forms */
-form {
-    display: flex;
-    flex-direction: column;
-    gap: 1em;
-    margin-top: 2em;
-}
-
-form label {
-    font-weight: 500;
-    margin-bottom: 0.3em;
-    color: #23272f;
-}
-
-form input, form select, form textarea {
-    padding: 0.7em 1em;
-    border: 1px solid #d1d5db;
-    border-radius: 5px;
-    font-size: 1em;
-    background: #f8fafc;
-    transition: border 0.2s;
-}
-
-form input:focus, form select:focus, form textarea:focus {
-    border: 1.5px solid #23272f;
-    outline: none;
-    background: #fff;
-}
-
-.Hero-h1{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-/* Hamburger Menu Styles */
+/* 
+    === HAMBURGER MENU (Mobile) ===
+    Styles the hamburger icon for mobile navigation.
+    Animates to an "X" when active.
+*/
 .hamburger {
     display: none;
     flex-direction: column;
@@ -182,7 +108,6 @@ form input:focus, form select:focus, form textarea:focus {
     align-items: center;
     z-index: 200;
 }
-
 .hamburger span {
     height: 4px;
     width: 28px;
@@ -192,49 +117,6 @@ form input:focus, form select:focus, form textarea:focus {
     transition: all 0.3s;
     display: block;
 }
-
-/* Show hamburger on mobile */
-@media (max-width: 900px) {
-    .hamburger {
-        display: flex;
-    }
-    nav ul {
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        background: #23272f;
-        flex-direction: column;
-        gap: 0;
-        width: 100%;
-        display: none;
-        box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-        border-radius: 0 0 12px 12px;
-        z-index: 150;
-    }
-    nav ul.active {
-        display: flex;
-        animation: dropdown 0.3s ease;
-    }
-    nav ul li {
-        width: 100%;
-        text-align: left;
-        margin: 0;
-    }
-    nav ul li a {
-        display: block;
-        width: 100%;
-        padding: 1em 2em;
-        border-radius: 0;
-    }
-}
-
-@keyframes dropdown {
-    from { opacity: 0; transform: translateY(-10px);}
-    to { opacity: 1; transform: translateY(0);}
-}
-
-/* Hamburger Animation (X) */
 .hamburger.active span:nth-child(1) {
     transform: rotate(45deg) translate(5px, 5px);
 }
@@ -245,163 +127,316 @@ form input:focus, form select:focus, form textarea:focus {
     transform: rotate(-45deg) translate(6px, -6px);
 }
 
-/* Navbar link hover effect */
-nav ul li a {
-    position: relative;
-    transition: background 0.2s, color 0.2s;
-}
-nav ul li a::after {
-    content: '';
-    display: block;
-    width: 0;
-    height: 2px;
-    background: #fff;
-    transition: width 0.3s;
-    position: absolute;
-    left: 0;
-    bottom: 0;
-}
-nav ul li a:hover::after, nav ul li a:focus::after {
-    width: 100%;
-}
-nav ul li a:hover, nav ul li a:focus {
-    background: #3a3f47;
-    color: #ffd700;
-    outline: none;
-}
-
-/* Responsive Design */
+/* 
+    === RESPONSIVE NAVIGATION ===
+    Adjusts navigation for screens <= 900px.
+    Hamburger menu appears, links become a dropdown.
+*/
 @media (max-width: 900px) {
-    main {
-        padding: 1.5em 1em;
-        margin: 1em;
+    .hamburger {
+        display: flex;
+        position: absolute;
+        top: 1.2em;
+        right: 1.5em;
     }
     nav {
-        flex-direction: column;
-        align-items: flex-start;
-        padding: 1em;
-    }
-    nav ul {
-        gap: 1em;
-        margin-top: 1em;
-        width: 100%;
-        flex-wrap: wrap;
-    }
-}
-
-@media (max-width: 600px) {
-    nav {
-        padding: 1em 0.5em;
+        flex-direction: row;
+        align-items: center;
+        position: relative;
+        padding: 1em 1em 1em 1em;
     }
     nav h1 {
-        font-size: 1.3em;
+        font-size: 1.2em;
+        margin-bottom: 0;
     }
     nav ul {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        left: auto;
+        background: #23272f;
         flex-direction: column;
-        gap: 0.5em;
-        width: 100%;
+        gap: 0;
+        width: 200px;
+        display: none;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+        border-radius: 0 0 12px 12px;
+        z-index: 150;
+        margin-top: 0.5em;
     }
-    main {
-        padding: 1em 0.3em;
-        margin: 0.5em;
+    nav ul.active {
+        display: flex;
+        animation: dropdown 0.3s ease;
+    }
+    nav ul li {
+        width: 100%;
+        text-align: center;
+        margin: 0;
+    }
+    nav ul li a {
+        display: block;
+        width: 100%;
+        padding: 1em 2em;
         border-radius: 0;
     }
-    table, th, td {
-        font-size: 0.95em;
-        padding: 0.7em 0.5em;
-    }
-    button, .btn {
-        width: 100%;
-        padding: 0.9em 0;
-    }
-    form {
-        gap: 0.7em;
+}
+@keyframes dropdown {
+    from { opacity: 0; transform: translateY(-10px);}
+    to { opacity: 1; transform: translateY(0);}
+}
+
+/* 
+    === MAIN CONTENT CONTAINER ===
+    Used to wrap main page content for consistent spacing and background.
+    Responsive for both desktop and mobile.
+*/
+.container, main {
+    padding: 2.5em 2em;
+    max-width: 700px;
+    margin: 2em auto;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    min-height: 70vh;
+}
+@media (max-width: 900px) {
+    .container, main {
+        padding: 1.5em 0.7em;
+        margin: 1em 0.3em;
+        border-radius: 10px;
+        max-width: 98vw;
     }
 }
 
-/* Utility Classes */
-.text-center {
-    text-align: center;
-}
-
-.mt-2 {
+/* 
+    === FORM STYLES ===
+    Styles all forms for a clean, modern look.
+    Includes spacing, background, and input styles.
+*/
+form, .styled-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2em;
     margin-top: 2em;
+    background: #f8fafc;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(35,39,47,0.04);
+    padding: 2em 1.5em;
 }
 
-.mb-2 {
-    margin-bottom: 2em;
+/* 
+    Styles for form titles and description boxes.
+*/
+.form-title {
+    text-align: center;
+    margin-bottom: 1em;
+    color: #23272f;
+    font-size: 2em;
+    font-weight: 700;
 }
-nav h1 {
-    margin: 0;
-    font-size: 1.5em;
+.description-box {
+    background: #f4f6fa;
+    border-left: 4px solid #3a3f47;
+    padding: 1em 1.2em;
+    border-radius: 8px;
+    margin-bottom: 1.5em;
+    color: #444;
+    font-size: 1em;
 }
 
-nav ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
+/* 
+    Styles for form groups (label + input).
+*/
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3em;
+}
+.styled-form label {
+    font-weight: 600;
+    color: #23272f;
+}
+.styled-form input[type="text"],
+.styled-form input[type="number"],
+.styled-form input[type="email"],
+.styled-form textarea {
+    padding: 0.7em 1em;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 1em;
+    background: #f8fafc;
+    transition: border 0.2s;
+    width: 100%;
+}
+.styled-form input:focus,
+.styled-form textarea:focus {
+    border-color: #3a3f47;
+    outline: none;
+}
+.styled-form textarea {
+    min-height: 80px;
+    resize: vertical;
 }
 
-nav ul li {
-    display: inline;
-    margin-right: 1em;
+/* 
+    === FORM ACTIONS (BUTTONS) ===
+    Styles for Update and Cancel buttons in forms.
+    Uses gradients and transitions for a modern look.
+*/
+.form-actions {
+    display: flex;
+    gap: 0.7em;
+    justify-content: flex-end;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 1em;
 }
-
-nav ul li a {
-    color: #fff;
+.update-btn, .cancel-btn {
+    min-width: 120px;
+    padding: 0.8em 2em;
+    border-radius: 8px;
+    font-size: 1.1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 8px rgba(35,39,47,0.08);
+    text-align: center;
     text-decoration: none;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    margin: 0;
+}
+.update-btn {
+    background: linear-gradient(90deg, #23272f 60%, #3a3f47 100%);
+    color: #fff;
+    border: none;
+}
+.update-btn:hover, .update-btn:focus {
+    background: linear-gradient(90deg, #3a3f47 60%, #23272f 100%);
+    transform: translateY(-2px) scale(1.03);
+    box-shadow: 0 6px 24px rgba(42, 168, 158, 0.12);
+    outline: none;
+}
+.cancel-btn {
+    background: linear-gradient(90deg, #f5bebe 20%, #ce2b2b 100%);
+    color: #fff !important;
+    border: none;
+}
+.cancel-btn:hover, .cancel-btn:focus {
+    background: linear-gradient(90deg, #cf2e2e 60%, #f5bebe 100%);
+    color: #fff !important;
+    outline: none;
+    transform: translateY(-2px) scale(1.03);
+    box-shadow: 0 6px 24px rgba(229, 115, 115, 0.12);
+}
+@media (max-width: 600px) {
+    .form-actions {
+        flex-direction: column;
+        gap: 0.7em;
+        align-items: stretch;
+    }
+    .update-btn, .cancel-btn {
+        width: 100%;
+        min-width: 0;
+        padding: 1em 0;
+        font-size: 1em;
+    }
 }
 
-main {
-    padding: 2em;
+/* 
+    === TABLE STYLES ===
+    Styles for all data tables, including responsiveness, striping, and header design.
+    Increased width and spacing for PC view.
+*/
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    margin-top: 1.5em;
+    background: #fafbfc;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    padding: 1.2rem 1rem 1rem;
 }
 
 table {
     width: 100%;
-    border-collapse: collapse;
-    margin-top: 1em;
-}
-
-table, th, td {
-    border: 1px solid #ccc;
+    max-width: 1200px;           /* Increased max width for PC view */
+    margin: 0 auto;
+    border-collapse: separate;
+    border-spacing: 0 0.5rem;    /* Adds vertical spacing between rows */
+    min-width: 900px;            /* Increased min-width for more columns */
+    background: #fafbfc;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    table-layout: auto;
+    word-break: break-word;
+    font-size: 1.08em;
 }
 
 th, td {
-    padding: 0.5em;
+    padding: 1.1rem 1.5rem;      /* Increased horizontal padding for more space between headers */
     text-align: left;
+    max-width: 500px;            /* Increased max-width for content */
+    word-break: break-all;
+    white-space: normal;
+    vertical-align: middle;
+    border-bottom: 1px solid #e3e6ea;
+    font-size: 1rem;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
 }
 
 th {
-    background-color: #f2f2f2;
+    background: #f1f3f6;
+    font-weight: 700;
+    color: #23272f;
+    border-bottom: 2px solid #d1d5db;
+    letter-spacing: 0.06em;      /* More spacing between header letters */
+    text-transform: uppercase;
 }
 
-button {
-    background-color: #333;
-    color: #fff;
-    padding: 0.5em 1em;
-    border: none;
-    cursor: pointer;
+td {
+    color: #23272f;
+    background: #fff;
 }
 
-button:hover {
-    background-color: #555;
+tr:nth-child(even) td {
+    background: #f7f9fa;
 }
 
-form {
-    display: flex;
-    flex-direction: column;
+tr:hover td {
+    background: #f0f4f8;
+    transition: background 0.2s;
 }
 
-form label {
-    margin-top: 0.5em;
+tr:last-child td {
+    border-bottom: none;
 }
 
-form input {
-    padding: 0.5em;
-    margin-top: 0.2em;
+@media (max-width: 900px) {
+    .table-responsive {
+        padding: 0.5em 0.2em;
+    }
+    table, th, td {
+        font-size: 0.97em;
+        padding: 0.7em 0.5em;
+        min-width: 120px;
+        max-width: 120px;
+    }
+    th {
+        font-size: 1em;
+        letter-spacing: 0.03em;
+    }
 }
 
-/* Dashboard Cards */
+/* 
+    === DASHBOARD CARDS ===
+    Styles for dashboard summary cards (e.g., total customers, sales).
+    Responsive and interactive.
+*/
 .dashboard-cards {
     display: flex;
     gap: 2em;
@@ -409,13 +444,18 @@ form input {
     flex-wrap: wrap;
 }
 .dashboard-cards .card {
-    background: #f1f3f6;
+    background: #adadad;
     border-radius: 10px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.04);
     padding: 2em;
     flex: 1 1 200px;
     min-width: 180px;
     text-align: center;
+    transition: box-shadow 0.2s, transform 0.2s;
+}
+.dashboard-cards .card:hover {
+    box-shadow: 0 6px 24px rgba(35,39,47,0.10);
+    transform: translateY(-4px) scale(1.03);
 }
 .dashboard-cards .card h3 {
     margin-bottom: 0.5em;
@@ -424,5 +464,70 @@ form input {
 .dashboard-cards .card p {
     font-size: 2em;
     font-weight: bold;
-    color: #3a3f47;
+    color: #000000;
+}
+@media (max-width: 900px) {
+    .dashboard-cards {
+        flex-direction: column;
+        gap: 1em;
+    }
+    .dashboard-cards .card {
+        min-width: 0;
+        padding: 1.2em;
+    }
+}
+
+/* 
+    === DASHBOARD CHARTS LAYOUT ===
+    Styles for dashboard charts section.
+    Responsive and organized layout for charts.
+*/
+.dashboard-charts {
+    display: flex;
+    gap: 2em;
+    margin-top: 2em;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+.chart-container {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    padding: 1.5em 2em;
+    flex: 1 1 350px;
+    min-width: 320px;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.chart-container h4 {
+    margin-bottom: 1em;
+    color: #23272f;
+    font-size: 1.1em;
+    font-weight: 600;
+}
+@media (max-width: 900px) {
+    .dashboard-charts {
+        flex-direction: column;
+        gap: 1em;
+    }
+    .chart-container {
+        min-width: 0;
+        padding: 1em 0.5em;
+    }
+}
+
+/* 
+    === UTILITY CLASSES ===
+    For quick margin and alignment tweaks.
+*/
+.text-center {
+    text-align: center;
+}
+.mt-2 {
+    margin-top: 2em;
+}
+.mb-2 {
+    margin-bottom: 2em;
 }

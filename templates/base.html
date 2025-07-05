@@ -15,7 +15,7 @@
             <span></span>
         </div>
         <ul id="nav-links">
-            <li><a href="{{ url_for('index') }}">Home</a></li>
+            <li><a href="{{ url_for('dashboard') }}">Home</a></li>
             <li><a href="{{ url_for('add_product') }}">Add Product</a></li>
             <li><a href="{{ url_for('list_products') }}">View Products</a></li>
             <li><a href="{{ url_for('register_customer') }}">Register Customer</a></li>
@@ -28,5 +28,7 @@
         {% block content %}{% endblock %}
     </main>
     <script src="{{ url_for('static', filename='navbar.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    {% block scripts %}{% endblock %}
 </body>
 </html>

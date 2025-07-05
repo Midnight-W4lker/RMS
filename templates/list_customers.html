@@ -1,27 +1,39 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>Customers</h2>
-<table>
-    <thead>
-        <tr>
-            <th>Customer ID</th>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for customer in customers %}
-        <tr>
-            <td>{{ customer.customer_id }}</td>
-            <td>{{ customer.name }}</td>
-            <td>{{ customer.email }}</td>
-            <td>
-                <a href="{{ url_for('update_customer', customer_id=customer.customer_id) }}">Update</a>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div class="container">
+    {% if page_title %}
+        <h1 class="form-title">{{ page_title }}</h1>
+    {% endif %}
+    {% if description %}
+        <div class="description-box">
+            <p>{{ description }}</p>
+        </div>
+    {% endif %}
+    <h2>Customers</h2>
+    <div class="table-responsive">
+        <table>
+            <thead class="table-header">
+                <tr>
+                    <th>Customer ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for customer in customers %}
+                <tr>
+                    <td>{{ customer.customer_id }}</td>
+                    <td>{{ customer.name }}</td>
+                    <td>{{ customer.email }}</td>
+                    <td>
+                        <a href="{{ url_for('update_customer', customer_id=customer.customer_id) }}">Update</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
 {% endblock %}

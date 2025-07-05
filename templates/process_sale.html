@@ -1,20 +1,32 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>Process Sale</h2>
-<form method="POST" action="{{ url_for('process_sale') }}">
-    <label for="sale_id">Sale ID:</label>
-    <input type="text" id="sale_id" name="sale_id" required>
-
-    <label for="product_id">Product ID:</label>
-    <input type="text" id="product_id" name="product_id" required>
-
-    <label for="customer_id">Customer ID:</label>
-    <input type="text" id="customer_id" name="customer_id" required>
-
-    <label for="quantity">Quantity:</label>
-    <input type="number" id="quantity" name="quantity" required>
-
-    <button type="submit">Process Sale</button>
-</form>
+<div class="container">
+    <h1 class="form-title">Process Sale</h1>
+    <div class="description-box">
+        <p>Fill in the details below to record a new sale transaction.</p>
+    </div>
+    <form method="POST" action="{{ url_for('process_sale') }}" class="styled-form">
+        <div class="form-group">
+            <label for="sale_id">Sale ID:</label>
+            <input type="text" id="sale_id" name="sale_id" required>
+        </div>
+        <div class="form-group">
+            <label for="product_id">Product ID:</label>
+            <input type="text" id="product_id" name="product_id" required>
+        </div>
+        <div class="form-group">
+            <label for="customer_id">Customer ID:</label>
+            <input type="text" id="customer_id" name="customer_id" required>
+        </div>
+        <div class="form-group">
+            <label for="quantity">Quantity:</label>
+            <input type="number" id="quantity" name="quantity" min="1" required>
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="update-btn">Process Sale</button>
+            <a href="{{ url_for('dashboard') }}" class="cancel-btn">Cancel</a>
+        </div>
+    </form>
+</div>
 {% endblock %}

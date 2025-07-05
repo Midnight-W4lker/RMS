@@ -1,14 +1,33 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %}  {# or the filename you save the above as #}
 
 {% block content %}
-<h2>Update Customer</h2>
-<form method="POST" action="{{ url_for('update_customer', customer_id=customer.customer_id) }}">
-    <label for="name">Name:</label>
-    <input type="text" id="name" name="name" value="{{ customer.name }}" required>
-
-    <label for="email">Email:</label>
-    <input type="email" id="email" name="email" value="{{ customer.email }}" required>
-
-    <button type="submit">Update Customer</button>
-</form>
+<div class="container">
+    {% if page_title %}
+        <h1 class="form-title">{{ page_title }}</h1>
+    {% endif %}
+    {% if description %}
+        <div class="description-box">
+            <p>{{ description }}</p>
+        </div>
+    {% endif %}
+    {% block page_content %}
+    <form method="POST" action="{{ url_for('update_customer', customer_id=customer.customer_id) }}" class="styled-form">
+        <div class="form-group">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" value="{{ customer.name }}" required>
+        </div>
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" value="{{ customer.email }}" required>
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="update-btn">Update Customer</button>
+            <a href="{{ url_for('list_customers') }}" class="cancel-btn">Cancel</a>
+        </div>
+    </form>
+    {% endblock %}
+</div>
 {% endblock %}
+
+{% set page_title = "Update Customer" %}
+{% set description = "Update the details below to modify the customer information." %}

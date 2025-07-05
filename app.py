@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from models import Product, Customer, Sale, db
 from sqlalchemy import func
+from datetime import datetime, timedelta
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///rms.db"
@@ -29,30 +30,54 @@ class Customer(db.Model):
 class Sale(db.Model):
     sale_id = db.Column(db.Integer, primary_key=True)
     product_id = db.Column(
-        db.Integer, db.ForeignKey("product.product_id"), nullable=False
+        db.String(100), db.ForeignKey("product.product_id"), nullable=False
     )
     customer_id = db.Column(
-        db.Integer, db.ForeignKey("customer.customer_id"), nullable=False
+        db.String(100), db.ForeignKey("customer.customer_id"), nullable=False
     )
     quantity = db.Column(db.Integer, nullable=False)
     total_price = db.Column(db.Float, nullable=False)
+    date = db.Column(
+        db.DateTime, nullable=False, default=func.now()
+    )  # <-- Add this line
 
     product = db.relationship("Product", back_populates="sales")
     customer = db.relationship("Customer", back_populates="sales")
 
 
 @app.route("/")
-def index():
-    total_customers = Customer.query.count()
-    total_products = Product.query.count()
-    total_sales = Sale.query.count()
-    total_revenue = db.session.query(func.sum(Sale.total_price)).scalar() or 0
+def dashboard():
+    # Get sales per day for the last 30 days
+    today = datetime.utcnow().date()
+    start_date = today - timedelta(days=29)
+    sales_per_day = (
+        db.session.query(
+            func.strftime("%Y-%m-%d", Sale.date),  # For SQLite
+            func.sum(Sale.total_price),
+        )
+        .filter(Sale.date >= start_date)
+        .group_by(func.strftime("%Y-%m-%d", Sale.date))
+        .order_by(func.strftime("%Y-%m-%d", Sale.date))
+        .all()
+    )
+    sales_trend_labels = [row[0] for row in sales_per_day]
+    sales_trend_data = [float(row[1]) for row in sales_per_day]
+
+    # --- Product Stock Distribution ---
+    products = Product.query.all()
+    stock_labels = [p.name for p in products]
+    stock_data = [p.stock_quantity for p in products]
+
     return render_template(
-        "index.html",
-        total_customers=total_customers,
-        total_products=total_products,
-        total_sales=total_sales,
-        total_revenue=total_revenue,
+        "dashboard.html",
+        total_customers=Customer.query.count(),
+        total_products=Product.query.count(),
+        total_sales=Sale.query.count(),
+        total_revenue=db.session.query(func.sum(Sale.total_price)).scalar() or 0,
+        sales_trend_labels=sales_trend_labels,
+        sales_trend_data=sales_trend_data,
+        stock_labels=stock_labels,
+        stock_data=stock_data,
     )
 
 
@@ -84,7 +109,9 @@ def update_product(product_id):
         product.stock_quantity = int(request.form["stock_quantity"])
         product.description = request.form["description"]
         db.session.commit()
-        return redirect(url_for("list_products"))  # or wherever you want to go after update
+        return redirect(
+            url_for("list_products")
+        )  # or wherever you want to go after update
     return render_template("update_product.html", product=product)
 
 
@@ -177,21 +204,6 @@ def update_customer(customer_id):
         db.session.commit()
         return redirect(url_for("list_customers"))
     return render_template("update_customer.html", customer=customer)
-
-
-@app.route("/dashboard")
-def dashboard():
-    total_customers = Customer.query.count()
-    total_products = Product.query.count()
-    total_sales = Sale.query.count()
-    total_revenue = db.session.query(db.func.sum(Sale.total_price)).scalar() or 0
-    return render_template(
-        "dashboard.html",
-        total_customers=total_customers,
-        total_products=total_products,
-        total_sales=total_sales,
-        total_revenue=total_revenue,
-    )
 
 
 if __name__ == "__main__":
