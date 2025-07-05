@@ -1,0 +1,168 @@
+/* COMPONENTS: Buttons, Cards, Forms, Tables, Typography */
+@import url('variables.css');
+
+/* TYPOGRAPHY */
+h1, .h1 {
+  font-size: var(--font-size-h1);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-heading);
+  letter-spacing: -0.01em;
+  margin-bottom: var(--space-3);
+}
+h2, .h2 {
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-heading);
+  letter-spacing: -0.01em;
+  margin-bottom: var(--space-2);
+}
+h3, .h3 {
+  font-size: var(--font-size-h3);
+  font-weight: var(--font-weight-semi);
+  line-height: var(--line-height-heading);
+  margin-bottom: var(--space-2);
+}
+body {
+  font-family: var(--font-main);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
+  color: var(--color-text);
+  background: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+label, input, button, textarea, select {
+  font-family: var(--font-main);
+  font-size: var(--font-size-base);
+}
+
+/* BUTTONS */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semi);
+  border-radius: var(--radius-sm);
+  border: none;
+  background: linear-gradient(90deg, var(--color-primary) 60%, var(--color-primary-light) 100%);
+  color: var(--color-surface);
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
+  text-decoration: none;
+  min-width: 120px;
+  -webkit-user-select: none;
+  user-select: none;
+  outline: none;
+}
+.btn:hover, .btn:focus {
+  background: linear-gradient(90deg, var(--color-secondary) 60%, var(--color-primary) 100%);
+  color: #fff;
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: var(--shadow-lg);
+}
+.btn:active {
+  background: var(--color-primary-light);
+  color: #fff;
+  box-shadow: var(--shadow-xs);
+  transform: scale(0.98);
+}
+.btn--primary { background: var(--color-primary); color: #fff; }
+.btn--secondary { background: var(--color-secondary); color: #fff; }
+.btn--danger { background: var(--color-danger); color: #fff; }
+.btn--small { font-size: var(--font-size-sm); padding: var(--space-1) var(--space-2); }
+
+/* CARDS */
+.card {
+  background: var(--color-surface);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  padding: var(--space-4);
+  margin-bottom: var(--space-4);
+  transition: box-shadow var(--transition), transform var(--transition);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+.card:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-4px) scale(1.03);
+}
+.card__title {
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--space-2);
+  color: var(--color-text);
+  letter-spacing: -0.01em;
+}
+.card__content {
+  padding: var(--space-2) 0 0 0;
+}
+
+/* FORMS */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+.form-label {
+  font-weight: var(--font-weight-semi);
+  margin-bottom: var(--space-1);
+  color: var(--color-text);
+}
+.form-input, .form-textarea {
+  font: inherit;
+  padding: var(--space-1) var(--space-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: #fff;
+  transition: border var(--transition), box-shadow var(--transition);
+  box-shadow: var(--shadow-xs);
+}
+.form-input:focus, .form-textarea:focus {
+  border-color: var(--color-secondary);
+  box-shadow: 0 0 0 2px var(--color-secondary-light);
+  outline: none;
+}
+.form-textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+/* TABLES */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  font-size: var(--font-size-base);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  box-shadow: var(--shadow-xs);
+}
+.table th, .table td {
+  padding: var(--space-2);
+  border-bottom: 1px solid var(--color-border);
+  text-align: left;
+}
+.table th {
+  background: var(--color-bg-alt);
+  font-weight: var(--font-weight-semi);
+  letter-spacing: 0.01em;
+  color: var(--color-text);
+}
+.table tr:last-child td {
+  border-bottom: none;
+}
+.table tr:hover {
+  background: var(--color-surface-alt);
+}
+.text-right { text-align: right; }
+.overflow-x-auto { overflow-x: auto; }
+.search-input { width: 100%; max-width: 300px; margin-bottom: var(--space-2); }

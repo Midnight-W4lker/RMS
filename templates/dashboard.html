@@ -1,27 +1,23 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container">
-    <h1 class="form-title">Dashboard</h1>
-    <div class="description-box">
-        <p>Welcome! Here’s a quick overview of your retail business. All stats and trends update in real time.</p>
-    </div>
+<main class="container">
     <div class="dashboard-cards">
         <div class="card">
-            <h3>Total Customers</h3>
-            <p>{{ total_customers }}</p>
+            <div class="card__title">Total Customers</div>
+            <div class="card__content">{{ total_customers }}</div>
         </div>
         <div class="card">
-            <h3>Total Products</h3>
-            <p>{{ total_products }}</p>
+            <div class="card__title">Total Products</div>
+            <div class="card__content">{{ total_products }}</div>
         </div>
         <div class="card">
-            <h3>Total Sales</h3>
-            <p>{{ total_sales }}</p>
+            <div class="card__title">Total Sales</div>
+            <div class="card__content">{{ total_sales }}</div>
         </div>
         <div class="card">
-            <h3>Total Revenue</h3>
-            <p>${{ '%.2f'|format(total_revenue) }}</p>
+            <div class="card__title">Total Revenue</div>
+            <div class="card__content">${{ '%.2f'|format(total_revenue) }}</div>
         </div>
     </div>
     <div class="dashboard-charts">
@@ -34,19 +30,16 @@
             <canvas id="stockPieChart" width="400" height="200"></canvas>
         </div>
     </div>
-</div>
+</main>
 {% endblock %}
 
 {% block scripts %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    // Example data passed from Flask
     const salesTrendLabels = {{ sales_trend_labels|tojson }};
     const salesTrendData = {{ sales_trend_data|tojson }};
     const stockLabels = {{ stock_labels|tojson }};
     const stockData = {{ stock_data|tojson }};
-
-    // Sales Trend Line Chart
     new Chart(document.getElementById('salesTrendChart'), {
         type: 'line',
         data: {
@@ -58,41 +51,20 @@
                 backgroundColor: 'rgba(35,39,47,0.08)',
                 fill: true,
                 tension: 0.4,
-                pointRadius: 4,
-                pointBackgroundColor: '#ffd700'
             }]
         },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: { display: false }
-            },
-            scales: {
-                x: { grid: { display: false } },
-                y: { beginAtZero: true }
-            }
-        }
+        options: {responsive: true}
     });
-
-    // Product Stock Pie Chart
     new Chart(document.getElementById('stockPieChart'), {
-        type: 'doughnut',
+        type: 'pie',
         data: {
             labels: stockLabels,
             datasets: [{
                 data: stockData,
-                backgroundColor: [
-                    '#23272f', '#ffd700', '#e57373', '#3a3f47', '#adadad', '#f5bebe'
-                ],
-                borderWidth: 2
+                backgroundColor: ['#23272f', '#6c63ff', '#f4a261', '#2a9d8f', '#e76f51']
             }]
         },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: { position: 'bottom' }
-            }
-        }
+        options: {responsive: true}
     });
 </script>
 {% endblock %}

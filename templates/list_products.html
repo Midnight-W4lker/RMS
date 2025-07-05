@@ -1,46 +1,45 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container">
-    {% if page_title %}
-        <h1 class="form-title">{{ page_title }}</h1>
-    {% endif %}
-    {% if description %}
-        <div class="description-box">
-            <p>{{ description }}</p>
+<main class="container">
+    <div class="card">
+        {% if page_title %}
+            <div class="card__title">{{ page_title }}</div>
+        {% endif %}
+        <div class="card__content">
+            {% if description %}
+                <p class="mb-3">{{ description }}</p>
+            {% endif %}
+            <h2 class="card__title">Products</h2>
+            <div class="overflow-x-auto">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Product ID</th>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Price $</th>
+                            <th>Stock Quantity</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for product in products %}
+                        <tr>
+                            <td>{{ product.product_id }}</td>
+                            <td>{{ product.name }}</td>
+                            <td>{{ product.description }}</td>
+                            <td>{{ product.price }}</td>
+                            <td>{{ product.stock_quantity }}</td>
+                            <td>
+                                <a class="btn btn--small btn--primary" href="{{ url_for('update_product', product_id=product.product_id) }}">Update</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
-    {% endif %}
-    {% block page_content %}
-<h2>Products</h2>
-<div class="table-responsive">
-    <table>
-        <thead class="table-header">
-            <tr>
-                <th>Product ID</th>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Price $</th>
-                <th>Stock Quantity</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for product in products %}
-            <tr>
-                <td>{{ product.product_id }}</td>
-                <td>{{ product.name }}</td>
-                <td>{{ product.description }}</td>
-                <td>{{ product.price }}</td>
-                <td>{{ product.stock_quantity }}</td>
-                <td>
-                    {{ product.name }} - {{ product.price }} - {{ product.quantity }}
-                    <a href="{{ url_for('update_product', product_id=product.product_id) }}">Update</a>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
-    {% endblock %}
-</div>
+    </div>
+</main>
 {% endblock %}

@@ -4,30 +4,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Retail Management System</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:400,500,700&display=swap">
+    <link rel="stylesheet" href="{{ url_for('static', filename='variables.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='components.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='layout.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='pages.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='toast.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <nav>
-        <h1>Retail Management</h1>
-        <div class="hamburger" id="hamburger-menu">
-            <span></span>
-            <span></span>
-            <span></span>
+    <div class="dashboard-layout">
+        <aside class="sidebar" aria-label="Sidebar navigation">
+            <div class="sidebar__brand">Retail Management</div>
+            <ul class="sidebar__nav">
+                <li><a href="{{ url_for('dashboard') }}" class="sidebar__link{% if request.endpoint == 'dashboard' %} active{% endif %}"><span class="sidebar__icon"><!-- dashboard icon --></span>Dashboard</a></li>
+                <li><a href="{{ url_for('add_product') }}" class="sidebar__link{% if request.endpoint == 'add_product' %} active{% endif %}"><span class="sidebar__icon"><!-- plus icon --></span>Add Product</a></li>
+                <li><a href="{{ url_for('list_products') }}" class="sidebar__link{% if request.endpoint == 'list_products' %} active{% endif %}"><span class="sidebar__icon"><!-- box icon --></span>Products</a></li>
+                <li><a href="{{ url_for('register_customer') }}" class="sidebar__link{% if request.endpoint == 'register_customer' %} active{% endif %}"><span class="sidebar__icon"><!-- user-plus icon --></span>Register Customer</a></li>
+                <li><a href="{{ url_for('list_customers') }}" class="sidebar__link{% if request.endpoint == 'list_customers' %} active{% endif %}"><span class="sidebar__icon"><!-- users icon --></span>Customers</a></li>
+                <li><a href="{{ url_for('process_sale') }}" class="sidebar__link{% if request.endpoint == 'process_sale' %} active{% endif %}"><span class="sidebar__icon"><!-- cart icon --></span>Process Sale</a></li>
+                <li><a href="{{ url_for('reports') }}" class="sidebar__link{% if request.endpoint == 'reports' %} active{% endif %}"><span class="sidebar__icon"><!-- report icon --></span>Reports</a></li>
+            </ul>
+            <div class="sidebar__footer">
+                <a href="#" class="sidebar__link sidebar__profile"><span class="sidebar__icon"><!-- user icon --></span>Profile</a>
+                <a href="#" class="sidebar__link sidebar__login"><span class="sidebar__icon"><!-- login icon --></span>Login</a>
+                <a href="#" class="sidebar__link sidebar__signup"><span class="sidebar__icon"><!-- signup icon --></span>Sign Up</a>
+            </div>
+            <button class="sidebar__toggle" aria-label="Toggle sidebar" aria-expanded="true"><span></span><span></span><span></span></button>
+        </aside>
+        <div class="main-content">
+            {% block content %}{% endblock %}
+            <footer class="footer">
+                <div>&copy; {{ current_year or 2025 }} Retail Management System</div>
+            </footer>
         </div>
-        <ul id="nav-links">
-            <li><a href="{{ url_for('dashboard') }}">Home</a></li>
-            <li><a href="{{ url_for('add_product') }}">Add Product</a></li>
-            <li><a href="{{ url_for('list_products') }}">View Products</a></li>
-            <li><a href="{{ url_for('register_customer') }}">Register Customer</a></li>
-            <li><a href="{{ url_for('list_customers') }}">View Customers</a></li>
-            <li><a href="{{ url_for('process_sale') }}">Process Sale</a></li>
-            <li><a href="{{ url_for('reports') }}">Reports</a></li>
-        </ul>
-    </nav>
-    <main>
-        {% block content %}{% endblock %}
-    </main>
+    </div>
     <script src="{{ url_for('static', filename='navbar.js') }}"></script>
+    <script src="{{ url_for('static', filename='ui-utils.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     {% block scripts %}{% endblock %}
 </body>
