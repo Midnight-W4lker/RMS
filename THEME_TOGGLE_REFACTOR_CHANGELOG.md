@@ -153,7 +153,7 @@ class ThemeManager {
 /* Complete theme toggle styles replicated */
 ```
 
-#### Added Theme Toggle HTML (lines 108-121):
+#### Added Theme Toggle HTML (lines 108-121)
 
 ```html
 <div class="auth-theme-toggle">
