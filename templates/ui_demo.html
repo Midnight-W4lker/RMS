@@ -1,0 +1,307 @@
+{% extends "base.html" %}
+
+{% block title %}UI/UX Demo - Core Eminance{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Header Section -->
+    <div class="page-header">
+        <h1 class="heading--h1">UI/UX Enhancement Demo</h1>
+        <p class="text--body-secondary">Showcase of top-graded components with dark/light theme support</p>
+    </div>
+
+    <!-- Theme Toggle Demo -->
+    <div class="card" style="margin-bottom: var(--space-8);">
+        <div class="card__header">
+            <h2 class="card__title">Theme System</h2>
+            <p class="card__subtitle">Toggle between dark and light themes to see adaptive colors</p>
+        </div>
+        <div class="card__content">
+            <p class="text--body">The theme toggle button in the navbar switches between light and dark modes. All icons, colors, and components adapt automatically using CSS variables and proper color theory.</p>
+            <div style="margin-top: var(--space-4);">
+                <button class="btn btn--secondary" onclick="showToast('Theme system is working perfectly!', 'success')">
+                    <i data-lucide="palette"></i>
+                    Test Theme Colors
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Button Showcase -->
+    <div class="card" style="margin-bottom: var(--space-8);">
+        <div class="card__header">
+            <h2 class="card__title">Enhanced Button System</h2>
+            <p class="card__subtitle">Micro-interactions, gradients, and perfect accessibility</p>
+        </div>
+        <div class="card__content">
+            <div style="display: flex; flex-wrap: wrap; gap: var(--space-3); margin-bottom: var(--space-4);">
+                <button class="btn btn--primary">
+                    <i data-lucide="check"></i>
+                    Primary Button
+                </button>
+                <button class="btn btn--secondary">
+                    <i data-lucide="settings"></i>
+                    Secondary Button
+                </button>
+                <button class="btn btn--danger">
+                    <i data-lucide="trash-2"></i>
+                    Danger Button
+                </button>
+                <button class="btn btn--success">
+                    <i data-lucide="plus"></i>
+                    Success Button
+                </button>
+            </div>
+            <div style="display: flex; flex-wrap: wrap; gap: var(--space-3); margin-bottom: var(--space-4);">
+                <button class="btn btn--primary btn--small">Small Button</button>
+                <button class="btn btn--secondary">Regular Button</button>
+                <button class="btn btn--success btn--large">Large Button</button>
+            </div>
+            <div style="display: flex; flex-wrap: wrap; gap: var(--space-3);">
+                <button class="btn btn--icon btn--primary">
+                    <i data-lucide="heart"></i>
+                </button>
+                <button class="btn btn--ghost">
+                    <i data-lucide="more-horizontal"></i>
+                    Ghost Button
+                </button>
+                <button class="btn btn--primary btn--loading">Loading...</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Form Elements Demo -->
+    <div class="card" style="margin-bottom: var(--space-8);">
+        <div class="card__header">
+            <h2 class="card__title">Enhanced Form Elements</h2>
+            <p class="card__subtitle">Modern inputs with micro-interactions and validation states</p>
+        </div>
+        <div class="card__content">
+            <form style="max-width: 500px;">
+                <div class="form-group">
+                    <label class="form-label form-label--required">Full Name</label>
+                    <input type="text" class="form-control" placeholder="Enter your full name" required>
+                    <div class="form-help">
+                        <i data-lucide="info"></i>
+                        Please enter your first and last name
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Email Address</label>
+                    <div class="form-control-icon">
+                        <input type="email" class="form-control" placeholder="your@email.com">
+                        <i data-lucide="mail" class="form-icon"></i>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Success State</label>
+                    <input type="text" class="form-control form-control--success" value="Valid input">
+                    <div class="form-success">
+                        <i data-lucide="check"></i>
+                        This field looks good!
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Error State</label>
+                    <input type="text" class="form-control form-control--error" value="Invalid input">
+                    <div class="form-error">
+                        <i data-lucide="x"></i>
+                        Please fix this field
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Select Option</label>
+                    <select class="form-control">
+                        <option>Choose an option</option>
+                        <option>Option 1</option>
+                        <option>Option 2</option>
+                        <option>Option 3</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Message</label>
+                    <textarea class="form-control" placeholder="Your message here..." rows="4"></textarea>
+                </div>
+                
+                <button type="button" class="btn btn--primary" onclick="showToast('Form validation looks great!', 'success')">
+                    <i data-lucide="send"></i>
+                    Submit Form
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notifications Demo -->
+    <div class="card" style="margin-bottom: var(--space-8);">
+        <div class="card__header">
+            <h2 class="card__title">Toast Notifications</h2>
+            <p class="card__subtitle">Enhanced notifications with icons and close buttons</p>
+        </div>
+        <div class="card__content">
+            <div style="display: flex; flex-wrap: wrap; gap: var(--space-3);">
+                <button class="btn btn--success" onclick="showToast('Operation completed successfully!', 'success')">
+                    <i data-lucide="check"></i>
+                    Success Toast
+                </button>
+                <button class="btn btn--danger" onclick="showToast('An error occurred while processing your request.', 'error')">
+                    <i data-lucide="x"></i>
+                    Error Toast
+                </button>
+                <button class="btn btn--secondary" onclick="showToast('Please review the information before proceeding.', 'warning')">
+                    <i data-lucide="alert-triangle"></i>
+                    Warning Toast
+                </button>
+                <button class="btn btn--primary" onclick="showToast('Your data has been saved to the server.', 'info')">
+                    <i data-lucide="info"></i>
+                    Info Toast
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cards Demo -->
+    <div class="card" style="margin-bottom: var(--space-8);">
+        <div class="card__header">
+            <h2 class="card__title">Enhanced Card System</h2>
+            <p class="card__subtitle">Cards with hover effects and visual hierarchy</p>
+        </div>
+        <div class="card__content">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: var(--space-6);">
+                <div class="dashboard-card">
+                    <div class="dashboard-card__icon">
+                        <i data-lucide="users"></i>
+                    </div>
+                    <div class="dashboard-card__value">1,234</div>
+                    <div class="dashboard-card__label">Total Users</div>
+                    <div class="dashboard-card__trend dashboard-card__trend--positive">
+                        <i data-lucide="trending-up"></i>
+                        +12% from last month
+                    </div>
+                </div>
+                
+                <div class="dashboard-card">
+                    <div class="dashboard-card__icon">
+                        <i data-lucide="shopping-cart"></i>
+                    </div>
+                    <div class="dashboard-card__value">567</div>
+                    <div class="dashboard-card__label">Orders Today</div>
+                    <div class="dashboard-card__trend dashboard-card__trend--positive">
+                        <i data-lucide="trending-up"></i>
+                        +8% from yesterday
+                    </div>
+                </div>
+                
+                <div class="dashboard-card">
+                    <div class="dashboard-card__icon">
+                        <i data-lucide="dollar-sign"></i>
+                    </div>
+                    <div class="dashboard-card__value">$12.3K</div>
+                    <div class="dashboard-card__label">Revenue</div>
+                    <div class="dashboard-card__trend dashboard-card__trend--negative">
+                        <i data-lucide="trending-down"></i>
+                        -3% from last week
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Typography Demo -->
+    <div class="card" style="margin-bottom: var(--space-8);">
+        <div class="card__header">
+            <h2 class="card__title">Typography System</h2>
+            <p class="card__subtitle">Modern, accessible typography with clear hierarchy</p>
+        </div>
+        <div class="card__content">
+            <h1 class="heading--display">Display Heading</h1>
+            <h1 class="heading--h1">Heading Level 1</h1>
+            <h2 class="heading--h2">Heading Level 2</h2>
+            <h3 class="heading--h3">Heading Level 3</h3>
+            <h4 class="heading--h4">Heading Level 4</h4>
+            
+            <p class="text--body">This is body text with proper line height and spacing for optimal readability.</p>
+            <p class="text--body-secondary">This is secondary body text used for less important information.</p>
+            <p class="text--small">This is small text used for captions and metadata.</p>
+            <p class="text--muted">This is muted text used for subtle information.</p>
+            <p class="text--caption">This is caption text</p>
+            
+            <div style="margin-top: var(--space-4);">
+                <a href="#" class="link">This is a link with hover effects</a>
+            </div>
+            
+            <div style="margin-top: var(--space-4); display: flex; gap: var(--space-4);">
+                <span class="text--success">Success text</span>
+                <span class="text--warning">Warning text</span>
+                <span class="text--danger">Danger text</span>
+                <span class="text--accent">Accent text</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Icon System Demo -->
+    <div class="card">
+        <div class="card__header">
+            <h2 class="card__title">Icon System with Color Theory</h2>
+            <p class="card__subtitle">Adaptive icons that respond to theme changes</p>
+        </div>
+        <div class="card__content">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: var(--space-4); text-align: center;">
+                <div style="padding: var(--space-3);">
+                    <i data-lucide="home" class="icon--lg"></i>
+                    <div class="text--small" style="margin-top: var(--space-2);">Default</div>
+                </div>
+                <div style="padding: var(--space-3);">
+                    <i data-lucide="check" class="icon--lg icon--success"></i>
+                    <div class="text--small" style="margin-top: var(--space-2);">Success</div>
+                </div>
+                <div style="padding: var(--space-3);">
+                    <i data-lucide="alert-triangle" class="icon--lg icon--warning"></i>
+                    <div class="text--small" style="margin-top: var(--space-2);">Warning</div>
+                </div>
+                <div style="padding: var(--space-3);">
+                    <i data-lucide="x" class="icon--lg icon--danger"></i>
+                    <div class="text--small" style="margin-top: var(--space-2);">Danger</div>
+                </div>
+                <div style="padding: var(--space-3);">
+                    <i data-lucide="info" class="icon--lg icon--muted"></i>
+                    <div class="text--small" style="margin-top: var(--space-2);">Muted</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Demo functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize Lucide icons
+    if (window.lucide) {
+        window.lucide.createIcons();
+    }
+    
+    // Add interactive examples
+    const buttons = document.querySelectorAll('.btn');
+    buttons.forEach(btn => {
+        if (!btn.onclick && !btn.classList.contains('btn--loading')) {
+            btn.addEventListener('click', function(e) {
+                // Add ripple effect
+                const ripple = document.createElement('span');
+                ripple.classList.add('btn__ripple');
+                const rect = this.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                ripple.style.width = ripple.style.height = size + 'px';
+                ripple.style.left = (e.clientX - rect.left - size/2) + 'px';
+                ripple.style.top = (e.clientY - rect.top - size/2) + 'px';
+                this.appendChild(ripple);
+                ripple.addEventListener('animationend', () => ripple.remove());
+            });
+        }
+    });
+});
+</script>
+{% endblock %}

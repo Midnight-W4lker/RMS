@@ -1,46 +1,68 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container">
-    {% if page_title %}
-        <h1 class="form-title">{{ page_title }}</h1>
-    {% endif %}
-    {% if description %}
-        <div class="description-box">
-            <p>{{ description }}</p>
+<div style="padding: var(--space-6);">
+    <!-- Page Header -->
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-8);">
+        <div>
+            <h1 style="font-size: var(--font-size-3xl); font-weight: var(--font-weight-bold); color: var(--text-primary); margin: 0;">Products</h1>
+            <p style="color: var(--text-secondary); margin: var(--space-2) 0 0 0;">Manage your product inventory</p>
         </div>
-    {% endif %}
-    {% block page_content %}
-<h2>Products</h2>
-<div class="table-responsive">
-    <table>
-        <thead class="table-header">
-            <tr>
-                <th>Product ID</th>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Price $</th>
-                <th>Stock Quantity</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for product in products %}
-            <tr>
-                <td>{{ product.product_id }}</td>
-                <td>{{ product.name }}</td>
-                <td>{{ product.description }}</td>
-                <td>{{ product.price }}</td>
-                <td>{{ product.stock_quantity }}</td>
-                <td>
-                    {{ product.name }} - {{ product.price }} - {{ product.quantity }}
-                    <a href="{{ url_for('update_product', product_id=product.product_id) }}">Update</a>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+        <a href="{{ url_for('add_product') }}" class="btn btn--primary" style="text-decoration: none;">
+            <i data-lucide="plus"></i>
+            Add Product
+        </a>
+    </div>
+
+    <!-- Products Table -->
+    <div class="table-container">
+        <table class="table" id="products-table">
+            <thead>
+                <tr>
+                    <th>Product ID</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Price</th>
+                    <th>Stock</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in products %}
+                <tr>
+                    <td><strong>{{ product.product_id }}</strong></td>
+                    <td>{{ product.name }}</td>
+                    <td>{{ product.description }}</td>
+                    <td>${{ '%.2f'|format(product.price) }}</td>
+                    <td>
+                        <span class="badge {% if product.stock_quantity > 10 %}badge--success{% elif product.stock_quantity > 5 %}badge--warning{% else %}badge--danger{% endif %}">
+                            {{ product.stock_quantity }}
+                        </span>
+                    </td>
+                    <td>
+                        <a href="{{ url_for('update_product', product_id=product.product_id) }}" class="btn btn--small btn--secondary" style="text-decoration: none;">
+                            <i data-lucide="edit"></i>
+                            Edit
+                        </a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6" style="text-align: center; padding: var(--space-8); color: var(--text-secondary);">
+                        <i data-lucide="package" style="width: 48px; height: 48px; margin-bottom: var(--space-4);"></i>
+                        <p>No products found. <a href="{{ url_for('add_product') }}" style="color: var(--accent);">Add your first product</a></p>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
-    {% endblock %}
-</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Re-animate table rows after filtering or update
+if (window.animateTableRows) animateTableRows('#products-table');
+</script>
 {% endblock %}

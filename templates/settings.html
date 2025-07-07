@@ -1,0 +1,274 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="settings-page">
+    <!-- Page Header -->
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">Settings</h1>
+            <p class="page-subtitle">Manage your account settings and preferences</p>
+        </div>
+        <div style="display: flex; gap: var(--space-3);">
+            <a href="{{ url_for('dashboard') }}" class="btn btn--secondary">
+                <i data-lucide="arrow-left"></i>
+                Back to Dashboard
+            </a>
+        </div>
+    </div>
+
+    <!-- Settings Container -->
+    <div class="settings-container">
+        <form method="POST" class="settings-form">
+            {{ form.hidden_tag() if form else '' }}
+            
+            <!-- Account Section -->
+            <section class="settings-card">
+                <div class="settings-card__header">
+                    <div class="settings-card__title">
+                        <div class="settings-card__icon">
+                            <i data-lucide="user"></i>
+                        </div>
+                        <div>
+                            <h3>Account Information</h3>
+                            <p>Update your account details and personal information</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="settings-card__content">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="username" name="username" 
+                                   value="{{ current_user.username }}" placeholder=" " required>
+                            <label for="username" class="form-label">Username</label>
+                        </div>
+                        
+                        <div class="form-group">
+                            <input type="email" class="form-control" id="email" name="email" 
+                                   value="{{ current_user.email }}" placeholder=" " required>
+                            <label for="email" class="form-label">Email Address</label>
+                        </div>
+                        
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="display_name" name="display_name" 
+                                   placeholder=" ">
+                            <label for="display_name" class="form-label">Display Name</label>
+                        </div>
+                        
+                        <div class="form-group">
+                            <select class="form-control" id="timezone" name="timezone">
+                                <option value="">Select timezone...</option>
+                                <option value="UTC">UTC</option>
+                                <option value="America/New_York">Eastern Time</option>
+                                <option value="America/Chicago">Central Time</option>
+                                <option value="America/Denver">Mountain Time</option>
+                                <option value="America/Los_Angeles">Pacific Time</option>
+                            </select>
+                            <label for="timezone" class="form-label">Timezone</label>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Preferences Section -->
+            <section class="settings-card">
+                <div class="settings-card__header">
+                    <div class="settings-card__title">
+                        <div class="settings-card__icon">
+                            <i data-lucide="sliders"></i>
+                        </div>
+                        <div>
+                            <h3>Preferences</h3>
+                            <p>Customize your experience and interface settings</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="settings-card__content">
+                    <div class="settings-options">
+                        <div class="setting-item">
+                            <div class="setting-item__info">
+                                <div class="setting-item__icon">
+                                    <i data-lucide="moon"></i>
+                                </div>
+                                <div>
+                                    <h4>Dark Mode</h4>
+                                    <p>Toggle between light and dark themes</p>
+                                </div>
+                            </div>
+                            <div class="toggle-switch">
+                                <input type="checkbox" id="dark_mode" name="dark_mode" class="toggle-input">
+                                <label for="dark_mode" class="toggle-label">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="setting-item">
+                            <div class="setting-item__info">
+                                <div class="setting-item__icon">
+                                    <i data-lucide="bell"></i>
+                                </div>
+                                <div>
+                                    <h4>Email Notifications</h4>
+                                    <p>Receive updates about your account activity</p>
+                                </div>
+                            </div>
+                            <div class="toggle-switch">
+                                <input type="checkbox" id="email_notifications" name="email_notifications" class="toggle-input" checked>
+                                <label for="email_notifications" class="toggle-label">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="setting-item">
+                            <div class="setting-item__info">
+                                <div class="setting-item__icon">
+                                    <i data-lucide="smartphone"></i>
+                                </div>
+                                <div>
+                                    <h4>Push Notifications</h4>
+                                    <p>Get notified about sales and inventory updates</p>
+                                </div>
+                            </div>
+                            <div class="toggle-switch">
+                                <input type="checkbox" id="push_notifications" name="push_notifications" class="toggle-input">
+                                <label for="push_notifications" class="toggle-label">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="setting-item">
+                            <div class="setting-item__info">
+                                <div class="setting-item__icon">
+                                    <i data-lucide="bar-chart-3"></i>
+                                </div>
+                                <div>
+                                    <h4>Analytics Tracking</h4>
+                                    <p>Help us improve by sharing usage data</p>
+                                </div>
+                            </div>
+                            <div class="toggle-switch">
+                                <input type="checkbox" id="analytics" name="analytics" class="toggle-input" checked>
+                                <label for="analytics" class="toggle-label">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Security Section -->
+            <section class="settings-card">
+                <div class="settings-card__header">
+                    <div class="settings-card__title">
+                        <div class="settings-card__icon">
+                            <i data-lucide="shield"></i>
+                        </div>
+                        <div>
+                            <h3>Security</h3>
+                            <p>Manage your password and security preferences</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="settings-card__content">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <input type="password" class="form-control" id="current_password" name="current_password" placeholder=" ">
+                            <label for="current_password" class="form-label">Current Password</label>
+                        </div>
+                        
+                        <div class="form-group">
+                            <input type="password" class="form-control" id="new_password" name="new_password" placeholder=" ">
+                            <label for="new_password" class="form-label">New Password</label>
+                        </div>
+                        
+                        <div class="form-group">
+                            <input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder=" ">
+                            <label for="confirm_password" class="form-label">Confirm New Password</label>
+                        </div>
+                    </div>
+                    
+                    <div class="security-actions">
+                        <button type="button" class="btn btn--secondary">
+                            <i data-lucide="smartphone"></i>
+                            Setup Two-Factor Auth
+                        </button>
+                        <button type="button" class="btn btn--secondary">
+                            <i data-lucide="download"></i>
+                            Download Data
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Action Buttons -->
+            <div class="settings-actions">
+                <button type="button" class="btn btn--secondary">
+                    <i data-lucide="rotate-ccw"></i>
+                    Reset to Defaults
+                </button>
+                <div style="display: flex; gap: var(--space-3);">
+                    <a href="{{ url_for('dashboard') }}" class="btn btn--secondary">Cancel</a>
+                    <button type="submit" class="btn btn--primary">
+                        <i data-lucide="save"></i>
+                        Save Changes
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Initialize Lucide icons
+    lucide.createIcons();
+    
+    // Settings page interactions
+    document.addEventListener('DOMContentLoaded', function() {
+        // Auto-detect and set dark mode toggle based on current theme
+        const isDarkMode = document.documentElement.getAttribute('data-theme') === 'dark';
+        const darkModeToggle = document.getElementById('dark_mode');
+        if (darkModeToggle) {
+            darkModeToggle.checked = isDarkMode;
+        }
+        
+        // Handle dark mode toggle
+        if (darkModeToggle) {
+            darkModeToggle.addEventListener('change', function() {
+                const themeToggleBtn = document.getElementById('theme-toggle-btn');
+                if (themeToggleBtn) {
+                    themeToggleBtn.click();
+                }
+            });
+        }
+        
+        // Form validation
+        const form = document.querySelector('.settings-form');
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                const newPassword = document.getElementById('new_password').value;
+                const confirmPassword = document.getElementById('confirm_password').value;
+                
+                if (newPassword && newPassword !== confirmPassword) {
+                    e.preventDefault();
+                    alert('New password and confirmation do not match.');
+                    return false;
+                }
+                
+                if (newPassword && newPassword.length < 8) {
+                    e.preventDefault();
+                    alert('Password must be at least 8 characters long.');
+                    return false;
+                }
+            });
+        }
+    });
+</script>
+{% endblock %}

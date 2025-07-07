@@ -1,0 +1,341 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="profile-page">
+    <!-- Page Header -->
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">Profile</h1>
+            <p class="page-subtitle">Manage your profile information and preferences</p>
+        </div>
+        <div style="display: flex; gap: var(--space-3);">
+            <a href="{{ url_for('dashboard') }}" class="btn btn--secondary">
+                <i data-lucide="arrow-left"></i>
+                Back to Dashboard
+            </a>
+        </div>
+    </div>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                    <div class="alert alert--{{ category }}" role="alert">
+                        <i data-lucide="check-circle" class="alert__icon"></i>
+                        <span>{{ message }}</span>
+                        <button type="button" class="alert__close" onclick="this.parentElement.remove()">
+                            <i data-lucide="x"></i>
+                        </button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Profile Container -->
+    <div class="profile-container">
+        <!-- Profile Overview Card -->
+        <div class="profile-overview">
+            <div class="profile-card">
+                <div class="profile-card__main">
+                    <div class="profile-card__avatar">
+                        <div class="profile-avatar" id="profileAvatarPreview">
+                            {% if current_user.avatar_filename %}
+                                <img src="{{ url_for('static', filename='uploads/avatars/' + current_user.avatar_filename) }}" 
+                                     alt="Profile picture" class="profile-avatar__image">
+                            {% else %}
+                                <i data-lucide="user"></i>
+                            {% endif %}
+                        </div>
+                        <div class="profile-avatar__actions">
+                            <input type="file" id="avatarUpload" class="profile-avatar__input" accept="image/*" aria-label="Upload profile picture">
+                            <label for="avatarUpload" class="btn btn--secondary profile-avatar-btn">
+                                <i data-lucide="camera"></i>
+                                Change Photo
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="profile-card__info">
+                        <h2>{{ current_user.username }}</h2>
+                        <p class="profile-email">{{ current_user.email }}</p>
+                        <div class="profile-badges">
+                            <span class="badge badge--success">
+                                <i data-lucide="shield-check"></i>
+                                Verified
+                            </span>
+                            <span class="badge badge--primary">
+                                <i data-lucide="crown"></i>
+                                {{ current_user.role.title() }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="profile-card__stats">
+                    <div class="profile-stat">
+                        <div class="profile-stat__value">{{ sales_count }}</div>
+                        <div class="profile-stat__label">Sales Processed</div>
+                    </div>
+                    <div class="profile-stat">
+                        <div class="profile-stat__value">{{ days_active }}</div>
+                        <div class="profile-stat__label">Days Active</div>
+                    </div>
+                    <div class="profile-stat">
+                        <div class="profile-stat__value">{{ accuracy_rate }}</div>
+                        <div class="profile-stat__label">Accuracy Rate</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Details -->
+        <div class="profile-details">
+            <form method="POST" class="profile-form" enctype="multipart/form-data">
+                {{ form.hidden_tag() }}
+                
+                <!-- Avatar Upload Section -->
+                <section class="settings-card">
+                    <div class="settings-card__header">
+                        <div class="settings-card__title">
+                            <div class="settings-card__icon">
+                                <i data-lucide="camera"></i>
+                            </div>
+                            <div>
+                                <h3>Profile Photo</h3>
+                                <p>Upload a profile picture to personalize your account</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-card__content">
+                        <div class="avatar-upload-section">
+                            <div class="current-avatar">
+                                {% if current_user.avatar_filename %}
+                                    <img src="{{ url_for('static', filename='uploads/avatars/' + current_user.avatar_filename) }}" 
+                                         alt="Current avatar" class="avatar-preview">
+                                {% else %}
+                                    <div class="avatar-placeholder">
+                                        <i data-lucide="user"></i>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="avatar-upload-controls">
+                                <div class="form-group">
+                                    {{ form.avatar(class="form-control", accept="image/*") }}
+                                    {{ form.avatar.label(class="form-label") }}
+                                    {% if form.avatar.errors %}
+                                        <div class="field-error">{{ form.avatar.errors[0] }}</div>
+                                    {% endif %}
+                                </div>
+                                <small class="form-text">Supported formats: JPG, JPEG, PNG, GIF. Max size: 16MB</small>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Personal Information -->
+                <section class="settings-card">
+                    <div class="settings-card__header">
+                        <div class="settings-card__title">
+                            <div class="settings-card__icon">
+                                <i data-lucide="user-circle"></i>
+                            </div>
+                            <div>
+                                <h3>Personal Information</h3>
+                                <p>Update your personal details and contact information</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-card__content">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                {{ form.first_name(class="form-control", placeholder=" ") }}
+                                {{ form.first_name.label(class="form-label") }}
+                            </div>
+                            
+                            <div class="form-group">
+                                {{ form.last_name(class="form-control", placeholder=" ") }}
+                                {{ form.last_name.label(class="form-label") }}
+                            </div>
+                            
+                            <div class="form-group">
+                                {{ form.job_title(class="form-control", placeholder=" ") }}
+                                {{ form.job_title.label(class="form-label") }}
+                            </div>
+                            
+                            <div class="form-group">
+                                {{ form.department(class="form-control", placeholder=" ") }}
+                                {{ form.department.label(class="form-label") }}
+                            </div>
+                            
+                            <div class="form-group">
+                                {{ form.phone(class="form-control", placeholder=" ") }}
+                                {{ form.phone.label(class="form-label") }}
+                            </div>
+                            
+                            <div class="form-group">
+                                {{ form.birth_date(class="form-control") }}
+                                {{ form.birth_date.label(class="form-label") }}
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Work Information -->
+                <section class="settings-card">
+                    <div class="settings-card__header">
+                        <div class="settings-card__title">
+                            <div class="settings-card__icon">
+                                <i data-lucide="briefcase"></i>
+                            </div>
+                            <div>
+                                <h3>Work Information</h3>
+                                <p>Your role and responsibilities within the organization</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-card__content">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                {{ form.employee_id(class="form-control", placeholder=" ") }}
+                                {{ form.employee_id.label(class="form-label") }}
+                            </div>
+                            
+                            <div class="form-group">
+                                {{ form.hire_date(class="form-control") }}
+                                {{ form.hire_date.label(class="form-label") }}
+                            </div>
+                            
+                            <div class="form-group">
+                                {{ form.work_location(class="form-control") }}
+                                {{ form.work_location.label(class="form-label") }}
+                            </div>
+                            
+                            <div class="form-group">
+                                {{ form.manager(class="form-control", placeholder=" ") }}
+                                {{ form.manager.label(class="form-label") }}
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            {{ form.bio(class="form-control", rows="4", placeholder=" ") }}
+                            {{ form.bio.label(class="form-label") }}
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Activity & Preferences -->
+                <section class="settings-card">
+                    <div class="settings-card__header">
+                        <div class="settings-card__title">
+                            <div class="settings-card__icon">
+                                <i data-lucide="activity"></i>
+                            </div>
+                            <div>
+                                <h3>Activity & Preferences</h3>
+                                <p>Configure your working preferences and availability</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-card__content">
+                        <div class="settings-options">
+                            <div class="setting-item">
+                                <div class="setting-item__info">
+                                    <div class="setting-item__icon">
+                                        <i data-lucide="clock"></i>
+                                    </div>
+                                    <div>
+                                        <h4>Show Online Status</h4>
+                                        <p>Let colleagues see when you're active</p>
+                                    </div>
+                                </div>
+                                <div class="toggle-switch">
+                                    {{ form.show_status(class="toggle-input") }}
+                                    <label for="{{ form.show_status.id }}" class="toggle-label">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <div class="setting-item__info">
+                                    <div class="setting-item__icon">
+                                        <i data-lucide="mail"></i>
+                                    </div>
+                                    <div>
+                                        <h4>Email Digest</h4>
+                                        <p>Receive weekly summary of your activities</p>
+                                    </div>
+                                </div>
+                                <div class="toggle-switch">
+                                    {{ form.email_digest(class="toggle-input") }}
+                                    <label for="{{ form.email_digest.id }}" class="toggle-label">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <div class="setting-item__info">
+                                    <div class="setting-item__icon">
+                                        <i data-lucide="lock"></i>
+                                    </div>
+                                    <div>
+                                        <h4>Profile Visibility</h4>
+                                        <p>Make your profile visible to team members</p>
+                                    </div>
+                                </div>
+                                <div class="toggle-switch">
+                                    {{ form.profile_visible(class="toggle-input") }}
+                                    <label for="{{ form.profile_visible.id }}" class="toggle-label">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-grid" style="margin-top: var(--space-6);">
+                            <div class="form-group">
+                                {{ form.preferred_language(class="form-control") }}
+                                {{ form.preferred_language.label(class="form-label") }}
+                            </div>
+                            
+                            <div class="form-group">
+                                {{ form.date_format(class="form-control") }}
+                                {{ form.date_format.label(class="form-label") }}
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Action Buttons -->
+                <div class="form-actions">
+                    <button type="button" class="btn btn--danger">
+                        <i data-lucide="trash-2"></i>
+                        Delete Account
+                    </button>
+                    <div style="display: flex; gap: var(--space-3);">
+                        <a href="{{ url_for('dashboard') }}" class="btn btn--secondary">
+                            <i data-lucide="arrow-left"></i>
+                            Cancel
+                        </a>
+                        {{ form.submit(class="btn btn--success") }}
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Initialize Lucide icons
+    lucide.createIcons();
+</script>
+{% endblock %}

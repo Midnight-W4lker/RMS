@@ -1,32 +1,31 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container">
-    <h1 class="form-title">Process Sale</h1>
-    <div class="description-box">
-        <p>Fill in the details below to record a new sale transaction.</p>
+<main class="container" style="padding: var(--space-8) 0;">
+    <div class="dashboard-card card" style="max-width: 32rem; margin: var(--space-12) auto; padding: var(--space-8); box-shadow: var(--shadow-lg); border-radius: var(--radius-2xl);">
+        <div class="card__title" style="font-size: var(--font-size-xl); font-weight: var(--font-weight-bold); color: var(--color-primary); margin-bottom: var(--space-6);">Process Sale</div>
+        <div class="card__content">
+            <p class="mb-3" style="color: var(--color-text-secondary); margin-bottom: var(--space-4);">Fill in the details below to record a new sale transaction.</p>
+            <form method="POST" action="{{ url_for('process_sale') }}" class="form">
+                {{ form.hidden_tag() }}
+                <div class="form-floating mb-4">
+                    {{ form.product_id(class_="form-floating-input", placeholder=" ") }}
+                    <label for="product_id" class="form-floating-label">Product</label>
+                </div>
+                <div class="form-floating mb-4">
+                    {{ form.customer_id(class_="form-floating-input", placeholder=" ") }}
+                    <label for="customer_id" class="form-floating-label">Customer</label>
+                </div>
+                <div class="form-floating mb-4">
+                    {{ form.quantity(class_="form-floating-input", placeholder=" ") }}
+                    <label for="quantity" class="form-floating-label">Quantity</label>
+                </div>
+                <div class="flex gap-2 mt-4">
+                    <button type="submit" class="btn btn--primary">Process Sale</button>
+                    <a href="{{ url_for('dashboard') }}" class="btn btn--secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
     </div>
-    <form method="POST" action="{{ url_for('process_sale') }}" class="styled-form">
-        <div class="form-group">
-            <label for="sale_id">Sale ID:</label>
-            <input type="text" id="sale_id" name="sale_id" required>
-        </div>
-        <div class="form-group">
-            <label for="product_id">Product ID:</label>
-            <input type="text" id="product_id" name="product_id" required>
-        </div>
-        <div class="form-group">
-            <label for="customer_id">Customer ID:</label>
-            <input type="text" id="customer_id" name="customer_id" required>
-        </div>
-        <div class="form-group">
-            <label for="quantity">Quantity:</label>
-            <input type="number" id="quantity" name="quantity" min="1" required>
-        </div>
-        <div class="form-actions">
-            <button type="submit" class="update-btn">Process Sale</button>
-            <a href="{{ url_for('dashboard') }}" class="cancel-btn">Cancel</a>
-        </div>
-    </form>
-</div>
+</main>
 {% endblock %}

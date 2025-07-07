@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Layout Test | Core Eminance</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:400,500,700&display=swap">
+    <link rel="stylesheet" href="{{ url_for('static', filename='variables.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='components.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='layout.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='pages.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .test-content {
+            padding: var(--space-6);
+            background: var(--bg-surface);
+            border-radius: var(--radius-lg);
+            margin: var(--space-4);
+        }
+        
+        .test-info {
+            background: var(--accent-light);
+            border-left: 4px solid var(--accent);
+            padding: var(--space-4);
+            margin: var(--space-4) 0;
+            border-radius: var(--radius-md);
+        }
+        
+        .screen-width {
+            position: fixed;
+            top: var(--space-2);
+            right: var(--space-2);
+            background: var(--bg-card);
+            padding: var(--space-2) var(--space-3);
+            border-radius: var(--radius-sm);
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-medium);
+            color: var(--text-secondary);
+            border: 1px solid var(--color-border);
+            z-index: 9999;
+        }
+        
+        .test-controls {
+            display: flex;
+            gap: var(--space-3);
+            margin: var(--space-4) 0;
+            flex-wrap: wrap;
+        }
+        
+        .test-btn {
+            padding: var(--space-2) var(--space-4);
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            font-size: var(--font-size-sm);
+            transition: all var(--transition-fast);
+        }
+        
+        .test-btn:hover {
+            background: var(--accent-hover);
+            transform: translateY(-1px);
+        }
+    </style>
+</head>
+<body>
+    <!-- Dynamic screen width indicator -->
+    <div class="screen-width" id="screen-width">Screen Width: <span id="width-value">0</span>px</div>
+    
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar" aria-label="Main navigation">
+            <button class="sidebar__close-btn" aria-label="Close sidebar">
+                <span class="visually-hidden">Close sidebar</span>
+                <i data-lucide="x"></i>
+            </button>
+            
+            <div class="sidebar__brand">
+                <div class="sidebar__logo">
+                    <i data-lucide="shopping-cart"></i>
+                </div>
+                <span>Core Eminance</span>
+            </div>
+            
+            <nav class="sidebar__nav">
+                <ul>
+                    <li><a href="#" class="sidebar__link active">
+                        <i data-lucide="layout-dashboard" class="sidebar__icon"></i>
+                        Dashboard
+                    </a></li>
+                    <li><a href="#" class="sidebar__link">
+                        <i data-lucide="package" class="sidebar__icon"></i>
+                        Products
+                    </a></li>
+                    <li><a href="#" class="sidebar__link">
+                        <i data-lucide="users" class="sidebar__icon"></i>
+                        Customers
+                    </a></li>
+                    <li><a href="#" class="sidebar__link">
+                        <i data-lucide="shopping-bag" class="sidebar__icon"></i>
+                        Sales
+                    </a></li>
+                    <li><a href="#" class="sidebar__link">
+                        <i data-lucide="bar-chart-3" class="sidebar__icon"></i>
+                        Reports
+                    </a></li>
+                </ul>
+            </nav>
+        </aside>
+        
+        <div class="sidebar-overlay" id="sidebar-overlay"></div>
+        
+        <div class="main-content">
+            <!-- Navbar -->
+            <header class="navbar" role="banner">
+                <button id="sidebar-mobile-toggle" class="navbar__mobile-toggle" aria-label="Toggle sidebar menu" aria-expanded="false">
+                    <span class="visually-hidden">Toggle sidebar menu</span>
+                    <i data-lucide="menu" class="menu-icon"></i>
+                    <i data-lucide="x" class="close-icon" style="display: none;"></i>
+                </button>
+                
+                <div class="navbar__brand">
+                    <i data-lucide="layout-dashboard"></i>
+                    <span>Core Eminance</span>
+                </div>
+                
+                <nav class="navbar__nav" id="navbar-nav" role="navigation">
+                    <ul>
+                        <li><a href="#" class="navbar-link active">
+                            <i data-lucide="layout-dashboard"></i>
+                            <span>Dashboard</span>
+                        </a></li>
+                        <li><a href="#" class="navbar-link">
+                            <i data-lucide="bar-chart-3"></i>
+                            <span>Reports</span>
+                        </a></li>
+                        <li><a href="#" class="navbar-link">
+                            <i data-lucide="settings"></i>
+                            <span>Settings</span>
+                        </a></li>
+                    </ul>
+                </nav>
+                
+                <div class="navbar__actions">
+                    <button id="theme-toggle-btn" 
+                            class="theme-toggle" 
+                            type="button"
+                            role="switch"
+                            aria-label="Toggle between light and dark themes"
+                            aria-pressed="false"
+                            aria-checked="false"
+                            tabindex="0">
+                        <i data-lucide="moon" class="theme-icon-dark" aria-hidden="true"></i>
+                        <i data-lucide="sun" class="theme-icon-light" aria-hidden="true"></i>
+                        <span class="visually-hidden">Switch color theme</span>
+                    </button>
+                    
+                    <div class="dropdown">
+                        <button class="dropdown-toggle user-avatar-btn" aria-haspopup="true" aria-expanded="false" aria-label="User menu">
+                            <i data-lucide="user"></i>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="#" class="dropdown-item" role="menuitem">
+                                <i data-lucide="user"></i>
+                                Profile
+                            </a></li>
+                            <li><a href="#" class="dropdown-item" role="menuitem">
+                                <i data-lucide="settings"></i>
+                                Settings
+                            </a></li>
+                            <li><hr style="margin: var(--space-2) 0; border: none; border-top: 1px solid var(--color-border);"></li>
+                            <li><a href="#" class="dropdown-item" role="menuitem">
+                                <i data-lucide="log-out"></i>
+                                Logout
+                            </a></li>
+                        </ul>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Main Content -->
+            <main id="main-content" class="content">
+                <div class="test-content">
+                    <h1>Responsive Layout Test</h1>
+                    
+                    <div class="test-info">
+                        <h2>Testing Instructions</h2>
+                        <p>This page tests the responsive navbar and sidebar layout. Use the controls below and resize your browser window to test different scenarios.</p>
+                    </div>
+                    
+                    <div class="test-controls">
+                        <button class="test-btn" onclick="testMobileWidth()">Test 390px Width</button>
+                        <button class="test-btn" onclick="testTabletWidth()">Test 768px Width</button>
+                        <button class="test-btn" onclick="testDesktopWidth()">Test 1024px Width</button>
+                        <button class="test-btn" onclick="toggleSidebar()">Toggle Sidebar</button>
+                        <button class="test-btn" onclick="toggleTheme()">Toggle Theme</button>
+                    </div>
+                    
+                    <h2>Test Checklist</h2>
+                    <ul>
+                        <li>✅ Navbar horizontal layout (no vertical stacking)</li>
+                        <li>✅ Logo width limited to 120px maximum</li>
+                        <li>✅ Sidebar completely hidden when closed on mobile</li>
+                        <li>✅ No sidebar strip visible at 390px width</li>
+                        <li>✅ Theme toggle works on all screen sizes</li>
+                        <li>✅ Mobile burger menu functions correctly</li>
+                        <li>✅ Dropdown menus work responsively</li>
+                        <li>✅ Smooth animations and transitions</li>
+                    </ul>
+                    
+                    <h2>Current Screen Info</h2>
+                    <p><strong>Width:</strong> <span id="current-width">Loading...</span>px</p>
+                    <p><strong>Height:</strong> <span id="current-height">Loading...</span>px</p>
+                    <p><strong>Device Pixel Ratio:</strong> <span id="pixel-ratio">Loading...</span></p>
+                    <p><strong>Theme:</strong> <span id="current-theme">Loading...</span></p>
+                </div>
+            </main>
+        </div>
+    </div>
+    
+    <!-- Scripts -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <script src="{{ url_for('static', filename='theme-system.js') }}"></script>
+    <script>
+        // Update screen width indicator
+        function updateScreenInfo() {
+            document.getElementById('width-value').textContent = window.innerWidth;
+            document.getElementById('current-width').textContent = window.innerWidth;
+            document.getElementById('current-height').textContent = window.innerHeight;
+            document.getElementById('pixel-ratio').textContent = window.devicePixelRatio || 1;
+            document.getElementById('current-theme').textContent = document.documentElement.getAttribute('data-theme') || 'light';
+        }
+        
+        // Test functions
+        function testMobileWidth() {
+            alert('Resize your browser to 390px width to test mobile layout. Check that no sidebar strip is visible when closed.');
+        }
+        
+        function testTabletWidth() {
+            alert('Resize your browser to 768px width to test tablet layout. This is the mobile/desktop breakpoint.');
+        }
+        
+        function testDesktopWidth() {
+            alert('Resize your browser to 1024px+ width to test desktop layout. Sidebar should be visible and navbar fully expanded.');
+        }
+        
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            const toggle = document.getElementById('sidebar-mobile-toggle');
+            
+            if (window.innerWidth <= 768) {
+                if (sidebar.classList.contains('open')) {
+                    closeSidebar();
+                } else {
+                    openSidebar();
+                }
+            } else {
+                alert('Sidebar toggle is only active on mobile (≤768px). Resize your window to test.');
+            }
+        }
+        
+        function toggleTheme() {
+            if (window.themeSystem) {
+                window.themeSystem.toggle();
+            } else {
+                // Fallback
+                const currentTheme = document.documentElement.getAttribute('data-theme');
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                document.documentElement.setAttribute('data-theme', newTheme);
+            }
+            updateScreenInfo();
+        }
+        
+        // Sidebar functions (copied from base.html)
+        function openSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            const toggle = document.getElementById('sidebar-mobile-toggle');
+            
+            sidebar.classList.add('open');
+            if (overlay) overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            if (toggle) {
+                toggle.setAttribute('aria-expanded', 'true');
+                const menuIcon = toggle.querySelector('.menu-icon');
+                const closeIcon = toggle.querySelector('.close-icon');
+                if (menuIcon && closeIcon) {
+                    menuIcon.style.display = 'none';
+                    closeIcon.style.display = 'block';
+                }
+            }
+        }
+        
+        function closeSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            const toggle = document.getElementById('sidebar-mobile-toggle');
+            
+            sidebar.classList.remove('open');
+            if (overlay) overlay.classList.remove('active');
+            document.body.style.overflow = '';
+            
+            if (toggle) {
+                toggle.setAttribute('aria-expanded', 'false');
+                const menuIcon = toggle.querySelector('.menu-icon');
+                const closeIcon = toggle.querySelector('.close-icon');
+                if (menuIcon && closeIcon) {
+                    menuIcon.style.display = 'block';
+                    closeIcon.style.display = 'none';
+                }
+            }
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateScreenInfo();
+            
+            // Initialize Lucide icons
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+            
+            // Set up event listeners
+            window.addEventListener('resize', updateScreenInfo);
+            
+            // Sidebar toggle
+            const sidebarToggle = document.getElementById('sidebar-mobile-toggle');
+            if (sidebarToggle) {
+                sidebarToggle.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    openSidebar();
+                });
+            }
+            
+            // Sidebar close
+            const closeBtn = document.querySelector('.sidebar__close-btn');
+            if (closeBtn) {
+                closeBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    closeSidebar();
+                });
+            }
+            
+            // Close sidebar when clicking outside
+            document.addEventListener('click', function(e) {
+                const sidebar = document.querySelector('.sidebar');
+                if (sidebar && sidebar.classList.contains('open') && 
+                    !sidebar.contains(e.target) && 
+                    !sidebarToggle.contains(e.target)) {
+                    closeSidebar();
+                }
+            });
+            
+            // Close sidebar when clicking overlay
+            const overlay = document.getElementById('sidebar-overlay');
+            if (overlay) {
+                overlay.addEventListener('click', closeSidebar);
+            }
+            
+            // Dropdown functionality
+            const dropdown = document.querySelector('.dropdown');
+            if (dropdown) {
+                const toggle = dropdown.querySelector('.dropdown-toggle');
+                const menu = dropdown.querySelector('.dropdown-menu');
+                
+                toggle.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const isOpen = toggle.getAttribute('aria-expanded') === 'true';
+                    if (isOpen) {
+                        toggle.setAttribute('aria-expanded', 'false');
+                        menu.style.display = 'none';
+                    } else {
+                        toggle.setAttribute('aria-expanded', 'true');
+                        menu.style.display = 'block';
+                    }
+                });
+                
+                document.addEventListener('click', function(e) {
+                    if (!dropdown.contains(e.target)) {
+                        toggle.setAttribute('aria-expanded', 'false');
+                        menu.style.display = 'none';
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

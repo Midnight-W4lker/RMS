@@ -1,33 +1,26 @@
-{% extends 'base.html' %}  {# or the filename you save the above as #}
+{% extends 'base.html' %}
 
 {% block content %}
-<div class="container">
-    {% if page_title %}
-        <h1 class="form-title">{{ page_title }}</h1>
-    {% endif %}
-    {% if description %}
-        <div class="description-box">
-            <p>{{ description }}</p>
+<main class="container" style="padding: var(--space-8) 0;">
+    <div class="dashboard-card card" style="max-width: 32rem; margin: var(--space-12) auto; padding: var(--space-8); box-shadow: var(--shadow-lg); border-radius: var(--radius-2xl);">
+        <div class="card__title" style="font-size: var(--font-size-xl); font-weight: var(--font-weight-bold); color: var(--color-primary); margin-bottom: var(--space-6);">Update Customer</div>
+        <div class="card__content">
+            <form method="POST" action="{{ url_for('update_customer', customer_id=customer.customer_id) }}" class="form">
+                {{ form.hidden_tag() }}
+                <div class="form-floating mb-4">
+                    {{ form.name(class_="form-floating-input", placeholder=" ") }}
+                    <label for="name" class="form-floating-label">Name</label>
+                </div>
+                <div class="form-floating mb-4">
+                    {{ form.email(class_="form-floating-input", placeholder=" ") }}
+                    <label for="email" class="form-floating-label">Email</label>
+                </div>
+                <div class="flex gap-2 mt-4">
+                    <button type="submit" class="btn btn--primary">Update Customer</button>
+                    <a href="{{ url_for('list_customers') }}" class="btn btn--secondary">Cancel</a>
+                </div>
+            </form>
         </div>
-    {% endif %}
-    {% block page_content %}
-    <form method="POST" action="{{ url_for('update_customer', customer_id=customer.customer_id) }}" class="styled-form">
-        <div class="form-group">
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="name" value="{{ customer.name }}" required>
-        </div>
-        <div class="form-group">
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" value="{{ customer.email }}" required>
-        </div>
-        <div class="form-actions">
-            <button type="submit" class="update-btn">Update Customer</button>
-            <a href="{{ url_for('list_customers') }}" class="cancel-btn">Cancel</a>
-        </div>
-    </form>
-    {% endblock %}
-</div>
+    </div>
+</main>
 {% endblock %}
-
-{% set page_title = "Update Customer" %}
-{% set description = "Update the details below to modify the customer information." %}

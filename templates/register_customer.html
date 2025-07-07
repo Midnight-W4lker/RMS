@@ -1,28 +1,30 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container">
-    <h1 class="form-title">Register Customer</h1>
-    <div class="description-box">
-        <p>Enter the customer's details below to register a new customer.</p>
+<main class="container" style="padding: var(--space-8) 0;">
+    <div class="dashboard-card card" style="max-width: 32rem; margin: var(--space-12) auto; padding: var(--space-8); box-shadow: var(--shadow-lg); border-radius: var(--radius-2xl);">
+        <div class="card__title" style="font-size: var(--font-size-xl); font-weight: var(--font-weight-bold); color: var(--color-primary); margin-bottom: var(--space-6);">Register Customer</div>
+        <div class="card__content">
+            <form method="POST" action="{{ url_for('register_customer') }}" class="form">
+                {{ form.hidden_tag() }}
+                <div class="form-floating mb-4">
+                    {{ form.customer_id(class_="form-floating-input", placeholder=" ") }}
+                    <label for="customer_id" class="form-floating-label">Customer ID</label>
+                </div>
+                <div class="form-floating mb-4">
+                    {{ form.name(class_="form-floating-input", placeholder=" ") }}
+                    <label for="name" class="form-floating-label">Name</label>
+                </div>
+                <div class="form-floating mb-4">
+                    {{ form.email(class_="form-floating-input", placeholder=" ") }}
+                    <label for="email" class="form-floating-label">Email</label>
+                </div>
+                <div class="flex gap-2 mt-4">
+                    <button type="submit" class="btn btn--primary">Register Customer</button>
+                    <a href="{{ url_for('list_customers') }}" class="btn btn--secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
     </div>
-    <form method="POST" action="{{ url_for('register_customer') }}" class="styled-form">
-        <div class="form-group">
-            <label for="customer_id">Customer ID:</label>
-            <input type="text" id="customer_id" name="customer_id" required>
-        </div>
-        <div class="form-group">
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="name" required>
-        </div>
-        <div class="form-group">
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
-        </div>
-        <div class="form-actions">
-            <button type="submit" class="update-btn">Register</button>
-            <a href="{{ url_for('list_customers') }}" class="cancel-btn">Cancel</a>
-        </div>
-    </form>
-</div>
+</main>
 {% endblock %}

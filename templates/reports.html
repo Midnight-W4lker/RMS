@@ -1,88 +1,118 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container">
-    <h1>Reports</h1>
-    <div class="description-box">
-        <p>All sales and customer reports are shown below.</p>
-    </div>
+<main class="reports-page" style="padding: var(--space-8) 0;">
+    <header style="margin-bottom: var(--space-8);">
+        <h1 class="card__title" style="font-size: var(--font-size-2xl); font-weight: var(--font-weight-bold); color: var(--color-primary);">Reports</h1>
+        <div class="card__content" style="color: var(--color-text-secondary);">
+            <p>All sales, product, and customer reports are shown below.</p>
+        </div>
+    </header>
+    <section class="reports-flex" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: var(--space-8);">
+        <!-- Products Table -->
+        <section class="report-card card" aria-labelledby="products-title" style="padding: var(--space-6); position:relative;">
+            <h2 class="card__title" id="products-title" style="font-size: var(--font-size-lg); font-weight: var(--font-weight-semibold); color: var(--color-primary); margin-bottom: var(--space-4);">Products</h2>
+            <input type="text" class="search-input form-input" placeholder="Search products..." aria-label="Search products" onkeyup="filterTable(this, 'products-table')" style="margin-bottom: var(--space-3);">
+            <div class="overflow-x-auto" style="max-height: 340px; overflow-y: auto; position:relative;">
+                <table id="products-table" class="table" style="width:100%; border-radius: var(--radius-lg); overflow: hidden; background: var(--color-surface); box-shadow: var(--shadow-xs);">
+                    <thead style="background: var(--color-bg-alt); color: var(--color-text-primary);">
+                        <tr>
+                            <th>Product ID</th>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Price $</th>
+                            <th>Stock Quantity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for product in products %}
+                        <tr style="border-bottom: 1px solid var(--color-border);">
+                            <td>{{ product.product_id }}</td>
+                            <td>{{ product.name }}</td>
+                            <td>{{ product.description }}</td>
+                            <td class="text-right">{{ product.price }}</td>
+                            <td>{{ product.stock_quantity }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        <!-- Customers Table -->
+        <section class="report-card card" aria-labelledby="customers-title" style="padding: var(--space-6); position:relative;">
+            <h2 class="card__title" id="customers-title" style="font-size: var(--font-size-lg); font-weight: var(--font-weight-semibold); color: var(--color-primary); margin-bottom: var(--space-4);">Customers</h2>
+            <input type="text" class="search-input form-input" placeholder="Search customers..." aria-label="Search customers" onkeyup="filterTable(this, 'customers-table')" style="margin-bottom: var(--space-3);">
+            <div class="overflow-x-auto" style="max-height: 340px; overflow-y: auto; position:relative;">
+                <table id="customers-table" class="table" style="width:100%; border-radius: var(--radius-lg); overflow: hidden; background: var(--color-surface); box-shadow: var(--shadow-xs);">
+                    <thead style="background: var(--color-bg-alt); color: var(--color-text-primary);">
+                        <tr>
+                            <th>Customer ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for customer in customers %}
+                        <tr style="border-bottom: 1px solid var(--color-border);">
+                            <td>{{ customer.customer_id }}</td>
+                            <td>{{ customer.name }}</td>
+                            <td>{{ customer.email }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        <!-- Sales Table -->
+        <section class="report-card card" aria-labelledby="sales-title" style="padding: var(--space-6); position:relative;">
+            <h2 class="card__title" id="sales-title" style="font-size: var(--font-size-lg); font-weight: var(--font-weight-semibold); color: var(--color-primary); margin-bottom: var(--space-4);">Sales</h2>
+            <input type="text" class="search-input form-input" placeholder="Search sales..." aria-label="Search sales" onkeyup="filterTable(this, 'sales-table')" style="margin-bottom: var(--space-3);">
+            <div class="overflow-x-auto" style="max-height: 340px; overflow-y: auto; position:relative;">
+                <table id="sales-table" class="table" style="width:100%; border-radius: var(--radius-lg); overflow: hidden; background: var(--color-surface); box-shadow: var(--shadow-xs);">
+                    <thead style="background: var(--color-bg-alt); color: var(--color-text-primary);">
+                        <tr>
+                            <th>Sale ID</th>
+                            <th>Product</th>
+                            <th>Customer</th>
+                            <th>Quantity</th>
+                            <th>Total $</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for sale in sales %}
+                        <tr style="border-bottom: 1px solid var(--color-border);">
+                            <td>{{ sale.sale_id }}</td>
+                            <td>{{ sale.product_name }}</td>
+                            <td>{{ sale.customer_name }}</td>
+                            <td>{{ sale.quantity }}</td>
+                            <td class="text-right">{{ sale.total }}</td>
+                            <td>{{ sale.date }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </section>
+</main>
+{% endblock %}
 
-    <h3>Products</h3>
-    <div class="table-responsive">
-        <table>
-            <thead>
-                <tr>
-                    <th>Product ID</th>
-                    <th>Name</th>
-                    <th>Description</th>
-                    <th>Price $</th>
-                    <th>Stock Quantity</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for product in products %}
-                <tr>
-                    <td>{{ product.product_id }}</td>
-                    <td>{{ product.name }}</td>
-                    <td>{{ product.description }}</td>
-                    <td style="text-align:right;">{{ product.price }}</td>
-                    <td>{{ product.stock_quantity }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-
-    <h3>Customers</h3>
-    <div class="table-responsive">
-        <table>
-            <thead class="table-header">
-                <tr>
-                    <th>Customer ID</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% if customers %}
-                    {% for customer in customers %}
-                    <tr>
-                        <td>{{ customer.customer_id }}</td>
-                        <td>{{ customer.name }}</td>
-                        <td>{{ customer.email }}</td>
-                    </tr>
-                    {% endfor %}
-                {% else %}
-                    <tr><td colspan="3" class="text-center">No customers found.</td></tr>
-                {% endif %}
-            </tbody>
-        </table>
-    </div>
-
-    <h3>Sales</h3>
-    <div class="table-responsive">
-        <table>
-            <thead class="table-header">
-                <tr>
-                    <th>Sale ID</th>
-                    <th scope="col">Product ID</th>
-                    <th scope="col">Customer ID</th>
-                    <th>Quantity</th>
-                    <th>Total Price $</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for sale in sales %}
-                <tr>
-                    <td>{{ sale.sale_id }}</td>
-                    <td>{{ sale.product_id }}</td>
-                    <td>{{ sale.customer_id }}</td>
-                    <td>{{ sale.quantity }}</td>
-                    <td>{{ sale.total_price }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-</div>
+{% block scripts %}
+<script>
+function filterTable(input, tableId) {
+    const filter = input.value.toLowerCase();
+    const table = document.getElementById(tableId);
+    const trs = table.getElementsByTagName('tr');
+    for (let i = 1; i < trs.length; i++) {
+        const rowText = trs[i].textContent.toLowerCase();
+        trs[i].style.display = rowText.includes(filter) ? '' : 'none';
+    }
+}
+// Re-animate table rows after filtering
+['products-table', 'customers-table', 'sales-table'].forEach(id => {
+  const input = document.querySelector(`[onkeyup*='${id}']`);
+  if (input) input.addEventListener('input', () => setTimeout(() => animateTableRows(`#${id}`), 50));
+});
+</script>
 {% endblock %}

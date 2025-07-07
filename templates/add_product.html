@@ -1,36 +1,42 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container">
-    <h1 class="form-title">Add Product</h1>
-    <div class="description-box">
-        <p>Fill in the details below to add a new product.</p>
+<div class="container" style="padding: var(--space-8) 0;">
+    <div class="card" style="max-width: 600px; margin: 0 auto;">
+        <div class="card__header">
+            <h1 class="card__title">Add Product</h1>
+            <p class="card__subtitle">Fill in the details below to add a new product.</p>
+        </div>
+        <form method="POST" action="{{ url_for('add_product') }}" class="card__content">
+            {{ form.hidden_tag() }}
+            <div class="form-grid">
+                <div class="form-group">
+                    {{ form.product_id(class_="form-control", placeholder="Product ID") }}
+                </div>
+                <div class="form-group">
+                    {{ form.name(class_="form-control", placeholder="Product Name") }}
+                </div>
+                <div class="form-group">
+                    {{ form.description(class_="form-control", placeholder="Description") }}
+                </div>
+                <div class="form-group">
+                    {{ form.price(class_="form-control", placeholder="Price ($)") }}
+                </div>
+                <div class="form-group">
+                    {{ form.stock_quantity(class_="form-control", placeholder="Stock Quantity") }}
+                </div>
+            </div>
+            <div style="display: flex; gap: var(--space-3); margin-top: var(--space-6);">
+                <button type="submit" class="btn btn--primary">
+                    <i data-lucide="save"></i>
+                    Save Product
+                </button>
+                <a href="{{ url_for('list_products') }}" class="btn btn--secondary" style="text-decoration: none;">
+                    <i data-lucide="arrow-left"></i>
+                    Cancel
+                </a>
+            </div>
+        </form>
     </div>
-    <form method="POST" action="{{ url_for('add_product') }}" class="styled-form">
-        <div class="form-group">
-            <label for="product_id">Product ID:</label>
-            <input type="text" id="product_id" name="product_id" required>
-        </div>
-        <div class="form-group">
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="name" required>
-        </div>
-        <div class="form-group">
-            <label for="description">Description:</label>
-            <input type="text" id="description" name="description" required>
-        </div>
-        <div class="form-group">
-            <label for="price">Price:</label>
-            <input type="number" step="0.01" id="price" name="price" required>
-        </div>
-        <div class="form-group">
-            <label for="stock_quantity">Stock Quantity:</label>
-            <input type="number" id="stock_quantity" name="stock_quantity" required>
-        </div>
-        <div class="form-actions">
-            <button type="submit" class="update-btn">Add Product</button>
-            <a href="{{ url_for('list_products') }}" class="cancel-btn">Cancel</a>
-        </div>
-    </form>
 </div>
 {% endblock %}

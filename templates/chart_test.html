@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chart Manager Test - Core Eminance</title>
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="/static/variables.css">
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/layout.css">
+    <link rel="stylesheet" href="/static/components.css">
+    <link rel="stylesheet" href="/static/pages.css">
+    <link rel="stylesheet" href="/static/toast.css">
+    
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        .test-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: var(--bg-surface);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-card);
+        }
+        
+        .test-header {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--color-border);
+        }
+        
+        .test-charts {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .chart-container {
+            background: var(--bg-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            height: 400px;
+        }
+        
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .chart-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .chart-filters {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .chart-canvas-wrapper {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+        
+        .test-controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+        
+        .theme-toggle {
+            padding: 0.75rem 1.5rem;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        
+        .theme-toggle:hover {
+            background: var(--accent-hover);
+            transform: translateY(-1px);
+        }
+        
+        .status {
+            padding: 1rem;
+            background: var(--bg-card);
+            border-radius: var(--radius-md);
+            margin-bottom: 2rem;
+            border-left: 4px solid var(--color-success);
+        }
+        
+        .error {
+            border-left-color: var(--color-error);
+            background: var(--color-error-light);
+        }
+        
+        @media (max-width: 768px) {
+            .test-charts {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <div class="test-header">
+            <h1 class="text-3xl font-bold text-primary mb-2">Chart Manager Test Suite</h1>
+            <p class="text-secondary">Testing theme-aware chart rendering, filter buttons, and Chart.js options</p>
+        </div>
+        
+        <div class="test-controls">
+            <button id="themeToggle" class="theme-toggle">
+                🌙 Switch to Dark Theme
+            </button>
+            <div class="status" id="status">
+                <strong>Status:</strong> Initializing...
+            </div>
+        </div>
+        
+        <div class="test-charts">
+            <!-- Sales Trend Chart -->
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h3 class="chart-title">Sales Trend</h3>
+                    <div class="chart-filters">
+                        <button class="chart-filter" data-chart-filter="salesTrend" data-period="7d">7D</button>
+                        <button class="chart-filter chart-filter--active" data-chart-filter="salesTrend" data-period="30d">30D</button>
+                        <button class="chart-filter" data-chart-filter="salesTrend" data-period="3m">3M</button>
+                    </div>
+                </div>
+                <div class="chart-canvas-wrapper">
+                    <canvas id="salesTrendChart"></canvas>
+                </div>
+            </div>
+            
+            <!-- Revenue Chart -->
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h3 class="chart-title">Revenue Trend</h3>
+                    <div class="chart-filters">
+                        <button class="chart-filter" data-chart-filter="revenue" data-period="7d">7D</button>
+                        <button class="chart-filter chart-filter--active" data-chart-filter="revenue" data-period="30d">30D</button>
+                        <button class="chart-filter" data-chart-filter="revenue" data-period="3m">3M</button>
+                    </div>
+                </div>
+                <div class="chart-canvas-wrapper">
+                    <canvas id="revenueChart"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <div class="test-results">
+            <h3 class="text-xl font-semibold mb-3">Test Results</h3>
+            <div id="testResults">
+                <p>🔄 Running tests...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Theme System -->
+    <script src="/static/theme-system.js"></script>
+    
+    <!-- Chart Manager -->
+    <script src="/static/chart-manager.js"></script>
+    
+    <!-- Test Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Wait for theme system to be fully loaded
+            function initializeTests() {
+                // Use the global theme manager instance
+                const themeSystem = window.themeManager;
+                
+                if (!themeSystem) {
+                    console.warn('Theme system not ready, retrying...');
+                    setTimeout(initializeTests, 100);
+                    return;
+                }
+                
+                console.log('✅ Theme system loaded successfully');
+                
+                // Setup theme toggle button
+                const themeToggle = document.getElementById('themeToggle');
+                const updateToggleText = () => {
+                    const currentTheme = document.documentElement.getAttribute('data-theme');
+                    themeToggle.innerHTML = currentTheme === 'dark' ? '☀️ Switch to Light Theme' : '🌙 Switch to Dark Theme';
+                };
+                
+                themeToggle.addEventListener('click', () => {
+                    themeSystem.toggleTheme();
+                    updateToggleText();
+                    runTests();
+                });
+                
+                updateToggleText();
+                
+                // Test runner
+            let testResults = [];
+            
+            function runTests() {
+                testResults = [];
+                
+                // Test 1: Chart Manager Initialization
+                testResults.push({
+                    name: 'Chart Manager Initialization',
+                    passed: window.chartManager && window.chartManager.initialized,
+                    details: window.chartManager ? 'Chart manager initialized successfully' : 'Chart manager not found'
+                });
+                
+                // Test 2: Charts Created
+                const salesChart = window.chartManager?.charts.get('salesTrend');
+                const revenueChart = window.chartManager?.charts.get('revenue');
+                testResults.push({
+                    name: 'Charts Created',
+                    passed: salesChart && revenueChart,
+                    details: `Sales chart: ${salesChart ? '✅' : '❌'}, Revenue chart: ${revenueChart ? '✅' : '❌'}`
+                });
+                
+                // Test 3: Theme Colors Applied
+                const colors = window.chartManager?.getThemeColors();
+                testResults.push({
+                    name: 'Theme Colors Detected',
+                    passed: colors && colors.chartText && colors.chartGrid,
+                    details: colors ? `Text: ${colors.chartText}, Grid: ${colors.chartGrid}` : 'No colors detected'
+                });
+                
+                // Test 4: Filter Buttons Setup
+                const filterButtons = document.querySelectorAll('[data-chart-filter]');
+                const hasListeners = Array.from(filterButtons).some(btn => btn._chartFilterHandler);
+                testResults.push({
+                    name: 'Filter Buttons Setup',
+                    passed: filterButtons.length > 0 && hasListeners,
+                    details: `Found ${filterButtons.length} filter buttons, listeners: ${hasListeners ? '✅' : '❌'}`
+                });
+                
+                // Test 5: No Console Errors
+                let hasErrors = false;
+                const originalError = console.error;
+                console.error = (...args) => {
+                    hasErrors = true;
+                    originalError.apply(console, args);
+                };
+                
+                setTimeout(() => {
+                    console.error = originalError;
+                    testResults.push({
+                        name: 'No Console Errors',
+                        passed: !hasErrors,
+                        details: hasErrors ? 'Console errors detected' : 'No console errors'
+                    });
+                    
+                    updateTestResults();
+                }, 1000);
+                
+                updateTestResults();
+            }
+            
+            function updateTestResults() {
+                const resultsContainer = document.getElementById('testResults');
+                const status = document.getElementById('status');
+                
+                const passedTests = testResults.filter(test => test.passed).length;
+                const totalTests = testResults.length;
+                
+                status.innerHTML = `<strong>Status:</strong> ${passedTests}/${totalTests} tests passed`;
+                status.className = passedTests === totalTests ? 'status' : 'status error';
+                
+                resultsContainer.innerHTML = testResults.map(test => `
+                    <div style="padding: 0.5rem; margin: 0.5rem 0; background: var(--bg-card); border-radius: var(--radius-sm); border-left: 4px solid ${test.passed ? 'var(--color-success)' : 'var(--color-error)'};">
+                        <strong>${test.passed ? '✅' : '❌'} ${test.name}</strong><br>
+                        <small>${test.details}</small>
+                    </div>
+                `).join('');
+            }
+            
+            // Run initial tests after a delay to allow chart manager to initialize
+            setTimeout(runTests, 2000);
+        });
+    </script>
+</body>
+</html>

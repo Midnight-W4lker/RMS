@@ -1,0 +1,296 @@
+{% extends 'auth_base.html' %}
+
+{% block title %}Create Account | Core Eminance{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+  <div class="auth-card">
+    <!-- Header -->
+    <div class="auth-header">
+      <div class="auth-icon">
+        <i data-lucide="user-plus"></i>
+      </div>
+      <h1 class="auth-title">Create Account</h1>
+      <p class="auth-subtitle">Join Core Eminance and start managing your retail business</p>
+    </div>
+    
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="auth-alerts">
+          {% for category, message in messages %}
+            <div class="alert alert--{{ 'danger' if category == 'error' else category }}">
+              <i data-lucide="{% if category == 'error' %}alert-circle{% elif category == 'success' %}check-circle{% else %}info{% endif %}" class="alert__icon"></i>
+              <div class="alert__content">{{ message }}</div>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+    
+    <!-- Signup Form -->
+    <form class="auth-form" method="POST" action="{{ url_for('signup') }}" novalidate>
+      {{ form.hidden_tag() }}
+      
+      <!-- Username Field -->
+      <div class="form-group">
+        {{ form.username(
+          class_="form-control" + (" form-control--error" if form.username.errors else ""),
+          placeholder="Username",
+          required=True,
+          autofocus=True,
+          autocomplete="username",
+          minlength="3",
+          maxlength="20"
+        ) }}
+        {% if form.username.errors %}
+          <div class="form-error">
+            <i data-lucide="alert-circle" class="form-error-icon"></i>
+            {% for error in form.username.errors %}
+              <span>{{ error }}</span>
+            {% endfor %}
+          </div>
+        {% endif %}
+        <div class="form-help">
+          <small style="color: var(--text-muted); font-size: var(--font-size-xs);">
+            3-20 characters, letters and numbers only
+          </small>
+        </div>
+      </div>
+      
+      <!-- Email Field -->
+      <div class="form-group">
+        {{ form.email(
+          class_="form-control" + (" form-control--error" if form.email.errors else ""),
+          placeholder="Email Address",
+          required=True,
+          type="email",
+          autocomplete="email"
+        ) }}
+        {% if form.email.errors %}
+          <div class="form-error">
+            <i data-lucide="alert-circle" class="form-error-icon"></i>
+            {% for error in form.email.errors %}
+              <span>{{ error }}</span>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+      
+      <!-- Password Field -->
+      <div class="form-group">
+        {{ form.password(
+          class_="form-control" + (" form-control--error" if form.password.errors else ""),
+          placeholder="Password",
+          required=True,
+          autocomplete="new-password",
+          minlength="8"
+        ) }}
+        {% if form.password.errors %}
+          <div class="form-error">
+            <i data-lucide="alert-circle" class="form-error-icon"></i>
+            {% for error in form.password.errors %}
+              <span>{{ error }}</span>
+            {% endfor %}
+          </div>
+        {% endif %}
+        <div class="form-help">
+          <small style="color: var(--text-muted); font-size: var(--font-size-xs);">
+            Minimum 8 characters with letters and numbers
+          </small>
+        </div>
+      </div>
+      
+      <!-- Confirm Password Field -->
+      <div class="form-group">
+        {{ form.confirm(
+          class_="form-control" + (" form-control--error" if form.confirm.errors else ""),
+          placeholder="Confirm Password",
+          required=True,
+          autocomplete="new-password"
+        ) }}
+        {% if form.confirm.errors %}
+          <div class="form-error">
+            <i data-lucide="alert-circle" class="form-error-icon"></i>
+            {% for error in form.confirm.errors %}
+              <span>{{ error }}</span>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+      
+      <!-- Terms and Conditions -->
+      <div class="form-group">
+        <div class="form-checkbox">
+          <input type="checkbox" id="terms" name="terms" required>
+          <label for="terms">
+            I agree to the <a href="#" style="color: var(--accent);">Terms of Service</a> and 
+            <a href="#" style="color: var(--accent);">Privacy Policy</a>
+          </label>
+        </div>
+      </div>
+      
+      <!-- Submit Actions -->
+      <div class="auth-actions">
+        <button type="submit" class="btn btn--primary" id="signup-btn">
+          <i data-lucide="user-plus"></i>
+          <span>Create Account</span>
+        </button>
+        
+        <div style="text-align: center; margin: var(--space-4) 0;">
+          <span style="color: var(--text-secondary); font-size: var(--font-size-sm);">Already have an account?</span>
+        </div>
+        
+        <a href="{{ url_for('login') }}" class="btn btn--secondary">
+          <i data-lucide="arrow-left"></i>
+          <span>Sign In Instead</span>
+        </a>
+      </div>
+    </form>
+    
+    <!-- Footer -->
+    <div class="auth-footer">
+      <p>© {{ current_year or 2025 }} Core Eminance. All rights reserved.</p>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const form = document.querySelector('.auth-form');
+  const submitBtn = document.getElementById('signup-btn');
+  const inputs = form.querySelectorAll('.form-control');
+  const passwordField = form.querySelector('input[name="password"]');
+  const confirmField = form.querySelector('input[name="confirm"]');
+  const termsCheckbox = form.querySelector('#terms');
+  
+  // Password strength indicator
+  function checkPasswordStrength(password) {
+    let strength = 0;
+    const checks = {
+      length: password.length >= 8,
+      lowercase: /[a-z]/.test(password),
+      uppercase: /[A-Z]/.test(password),
+      number: /[0-9]/.test(password),
+      special: /[^A-Za-z0-9]/.test(password)
+    };
+    
+    strength = Object.values(checks).filter(Boolean).length;
+    return { strength, checks };
+  }
+  
+  // Add loading state to form submission
+  form.addEventListener('submit', function(e) {
+    if (!termsCheckbox.checked) {
+      e.preventDefault();
+      showError(termsCheckbox.parentElement, 'You must agree to the terms and conditions');
+      return;
+    }
+    
+    submitBtn.classList.add('loading');
+    submitBtn.disabled = true;
+    
+    // Re-enable after 5 seconds to prevent permanent lock
+    setTimeout(() => {
+      submitBtn.classList.remove('loading');
+      submitBtn.disabled = false;
+    }, 5000);
+  });
+  
+  // Enhanced input validation
+  inputs.forEach(input => {
+    input.addEventListener('blur', function() {
+      validateField(this);
+    });
+    
+    input.addEventListener('input', function() {
+      if (this.classList.contains('form-control--error')) {
+        validateField(this);
+      }
+    });
+  });
+  
+  // Real-time password confirmation
+  confirmField.addEventListener('input', function() {
+    if (this.value && passwordField.value) {
+      if (this.value === passwordField.value) {
+        this.classList.remove('form-control--error');
+        this.classList.add('form-control--success');
+        hideError(this.parentElement);
+      } else {
+        this.classList.add('form-control--error');
+        this.classList.remove('form-control--success');
+        showError(this.parentElement, 'Passwords do not match');
+      }
+    }
+  });
+  
+  // Password strength validation
+  passwordField.addEventListener('input', function() {
+    const { strength, checks } = checkPasswordStrength(this.value);
+    
+    if (this.value.length > 0) {
+      if (strength >= 3) {
+        this.classList.remove('form-control--error');
+        this.classList.add('form-control--success');
+        hideError(this.parentElement);
+      } else {
+        this.classList.add('form-control--error');
+        this.classList.remove('form-control--success');
+        showError(this.parentElement, 'Password should be stronger');
+      }
+    }
+    
+    // Re-validate confirm password if it has value
+    if (confirmField.value) {
+      confirmField.dispatchEvent(new Event('input'));
+    }
+  });
+  
+  function validateField(field) {
+    const value = field.value.trim();
+    let isValid = field.checkValidity() && value.length > 0;
+    
+    // Additional email validation
+    if (field.type === 'email' && value) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      isValid = emailRegex.test(value);
+    }
+    
+    if (isValid) {
+      field.classList.remove('form-control--error');
+      field.classList.add('form-control--success');
+      hideError(field.parentElement);
+    } else {
+      field.classList.add('form-control--error');
+      field.classList.remove('form-control--success');
+    }
+  }
+  
+  function showError(container, message) {
+    hideError(container);
+    const errorDiv = document.createElement('div');
+    errorDiv.className = 'form-error';
+    errorDiv.innerHTML = `
+      <i data-lucide="alert-circle" class="form-error-icon"></i>
+      <span>${message}</span>
+    `;
+    container.appendChild(errorDiv);
+    
+    // Re-create icons for new elements
+    if (window.lucide) {
+      lucide.createIcons();
+    }
+  }
+  
+  function hideError(container) {
+    const existingError = container.querySelector('.form-error');
+    if (existingError) {
+      existingError.remove();
+    }
+  }
+});
+</script>
+{% endblock %}

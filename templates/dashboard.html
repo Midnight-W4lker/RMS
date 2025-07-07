@@ -1,97 +1,328 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container">
-    <h1 class="form-title">Dashboard</h1>
-    <div class="description-box">
-        <p>Welcome! Here’s a quick overview of your retail business. All stats and trends update in real time.</p>
+<div style="padding: var(--space-6);">
+    <!-- Page Header -->
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-8);">
+        <div>
+            <h1 style="font-size: var(--font-size-3xl); font-weight: var(--font-weight-bold); color: var(--text-primary); margin: 0;">Dashboard</h1>
+            <p style="color: var(--text-secondary); margin: var(--space-2) 0 0 0;">Welcome back! Here's an overview of your retail operations.</p>
+        </div>
+        <div style="display: flex; gap: var(--space-3);">
+            <button class="btn btn--secondary">
+                <i data-lucide="download"></i>
+                Export Report
+            </button>
+            <button class="btn btn--primary">
+                <i data-lucide="plus"></i>
+                Quick Sale
+            </button>
+        </div>
     </div>
+
+    <!-- Dashboard Cards -->
     <div class="dashboard-cards">
-        <div class="card">
-            <h3>Total Customers</h3>
-            <p>{{ total_customers }}</p>
+        <div class="dashboard-card">
+            <div class="dashboard-card__header">
+                <h3 class="dashboard-card__title">Total Customers</h3>
+                <div class="dashboard-card__icon">
+                    <i data-lucide="users"></i>
+                </div>
+            </div>
+            <div class="dashboard-card__value">{{ total_customers }}</div>
+            <p class="dashboard-card__subtitle">Active customers</p>
+            <div class="dashboard-card__trend dashboard-card__trend--positive">
+                <i data-lucide="trending-up"></i>
+                +12% from last month
+            </div>
         </div>
-        <div class="card">
-            <h3>Total Products</h3>
-            <p>{{ total_products }}</p>
+
+        <div class="dashboard-card">
+            <div class="dashboard-card__header">
+                <h3 class="dashboard-card__title">Total Products</h3>
+                <div class="dashboard-card__icon">
+                    <i data-lucide="package"></i>
+                </div>
+            </div>
+            <div class="dashboard-card__value">{{ total_products }}</div>
+            <p class="dashboard-card__subtitle">Products in inventory</p>
+            <div class="dashboard-card__trend dashboard-card__trend--positive">
+                <i data-lucide="trending-up"></i>
+                +8% from last month
+            </div>
         </div>
-        <div class="card">
-            <h3>Total Sales</h3>
-            <p>{{ total_sales }}</p>
+
+        <div class="dashboard-card">
+            <div class="dashboard-card__header">
+                <h3 class="dashboard-card__title">Total Sales</h3>
+                <div class="dashboard-card__icon">
+                    <i data-lucide="shopping-bag"></i>
+                </div>
+            </div>
+            <div class="dashboard-card__value">{{ total_sales }}</div>
+            <p class="dashboard-card__subtitle">Orders this month</p>
+            <div class="dashboard-card__trend dashboard-card__trend--positive">
+                <i data-lucide="trending-up"></i>
+                +23% from last month
+            </div>
         </div>
-        <div class="card">
-            <h3>Total Revenue</h3>
-            <p>${{ '%.2f'|format(total_revenue) }}</p>
+
+        <div class="dashboard-card">
+            <div class="dashboard-card__header">
+                <h3 class="dashboard-card__title">Total Revenue</h3>
+                <div class="dashboard-card__icon">
+                    <i data-lucide="dollar-sign"></i>
+                </div>
+            </div>
+            <div class="dashboard-card__value">${{ '%.2f'|format(total_revenue) }}</div>
+            <p class="dashboard-card__subtitle">Revenue this month</p>
+            <div class="dashboard-card__trend dashboard-card__trend--positive">
+                <i data-lucide="trending-up"></i>
+                +18% from last month
+            </div>
         </div>
     </div>
+
+    <!-- Charts Section -->
     <div class="dashboard-charts">
         <div class="chart-container">
-            <h4>Sales Trend</h4>
-            <canvas id="salesTrendChart" width="400" height="200"></canvas>
+            <div class="chart-header">
+                <h3 class="chart-title">Sales Trend</h3>
+                <div class="chart-filters">
+                    <button class="chart-filter" data-chart-filter="salesTrend" data-period="7d">7D</button>
+                    <button class="chart-filter chart-filter--active" data-chart-filter="salesTrend" data-period="30d">30D</button>
+                    <button class="chart-filter" data-chart-filter="salesTrend" data-period="3m">3M</button>
+                </div>
+            </div>
+            <div class="chart-canvas">
+                <canvas id="salesTrendChart"></canvas>
+            </div>
         </div>
+
         <div class="chart-container">
-            <h4>Product Stock Distribution</h4>
-            <canvas id="stockPieChart" width="400" height="200"></canvas>
+            <div class="chart-header">
+                <h3 class="chart-title">Revenue Distribution</h3>
+                <div class="chart-filters">
+                    <button class="chart-filter" data-chart-filter="revenue" data-period="7d">7D</button>
+                    <button class="chart-filter chart-filter--active" data-chart-filter="revenue" data-period="30d">30D</button>
+                    <button class="chart-filter" data-chart-filter="revenue" data-period="3m">3M</button>
+                </div>
+            </div>
+            <div class="chart-canvas">
+                <canvas id="revenueChart"></canvas>
+            </div>
         </div>
+    </div>
+
+    <!-- Recent Activity Table -->
+    <div class="table-container">
+        <div style="padding: var(--space-4); border-bottom: 1px solid var(--color-border);">
+            <h3 style="margin: 0; font-size: var(--font-size-lg); font-weight: var(--font-weight-semibold);">Recent Sales</h3>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Customer</th>
+                    <th>Product</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Sample data - replace with dynamic content -->
+                <tr>
+                    <td>#ORD-001</td>
+                    <td>John Doe</td>
+                    <td>Premium Widget</td>
+                    <td>$45.99</td>
+                    <td><span class="badge badge--success">Completed</span></td>
+                    <td>2 hours ago</td>
+                </tr>
+                <tr>
+                    <td>#ORD-002</td>
+                    <td>Jane Smith</td>
+                    <td>Basic Package</td>
+                    <td>$29.99</td>
+                    <td><span class="badge badge--warning">Pending</span></td>
+                    <td>1 day ago</td>
+                </tr>
+                <tr>
+                    <td>#ORD-003</td>
+                    <td>Bob Johnson</td>
+                    <td>Deluxe Set</td>
+                    <td>$89.99</td>
+                    <td><span class="badge badge--success">Completed</span></td>
+                    <td>2 days ago</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </div>
 {% endblock %}
 
 {% block scripts %}
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    // Example data passed from Flask
-    const salesTrendLabels = {{ sales_trend_labels|tojson }};
-    const salesTrendData = {{ sales_trend_data|tojson }};
-    const stockLabels = {{ stock_labels|tojson }};
-    const stockData = {{ stock_data|tojson }};
-
-    // Sales Trend Line Chart
-    new Chart(document.getElementById('salesTrendChart'), {
-        type: 'line',
-        data: {
-            labels: salesTrendLabels,
-            datasets: [{
-                label: 'Sales',
-                data: salesTrendData,
-                borderColor: '#23272f',
-                backgroundColor: 'rgba(35,39,47,0.08)',
-                fill: true,
-                tension: 0.4,
-                pointRadius: 4,
-                pointBackgroundColor: '#ffd700'
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: { display: false }
-            },
-            scales: {
-                x: { grid: { display: false } },
-                y: { beginAtZero: true }
-            }
+    /**
+     * Dashboard Charts Configuration
+     * Modern chart styling with theme support
+     */
+    
+    // Get theme colors from CSS variables
+    function getThemeColors() {
+        const style = getComputedStyle(document.documentElement);
+        return {
+            primary: style.getPropertyValue('--accent').trim(),
+            primaryLight: style.getPropertyValue('--accent-light').trim(),
+            success: style.getPropertyValue('--color-success').trim(),
+            warning: style.getPropertyValue('--color-warning').trim(),
+            danger: style.getPropertyValue('--color-danger').trim(),
+            textPrimary: style.getPropertyValue('--text-primary').trim(),
+            textSecondary: style.getPropertyValue('--text-secondary').trim(),
+            border: style.getPropertyValue('--color-border').trim()
+        };
+    }
+    
+    // Wait for DOM and Chart.js to load
+    document.addEventListener('DOMContentLoaded', function() {
+        const colors = getThemeColors();
+        
+        // Sample data - replace with dynamic data from backend
+        const salesTrendLabels = {{ sales_trend_labels|default(['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'])|tojson }};
+        const salesTrendData = {{ sales_trend_data|default([65, 78, 85, 92, 88, 95])|tojson }};
+        const stockLabels = {{ stock_labels|default(['Electronics', 'Clothing', 'Home & Garden', 'Sports', 'Books'])|tojson }};
+        const stockData = {{ stock_data|default([12, 19, 8, 15, 6])|tojson }};
+        
+        // Sales Trend Line Chart
+        if (document.getElementById('salesTrendChart')) {
+            new Chart(document.getElementById('salesTrendChart'), {
+                type: 'line',
+                data: {
+                    labels: salesTrendLabels,
+                    datasets: [{
+                        label: 'Sales',
+                        data: salesTrendData,
+                        borderColor: colors.primary,
+                        backgroundColor: colors.primaryLight,
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: colors.primary,
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointRadius: 5,
+                        pointHoverRadius: 7
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    aspectRatio: 2.5,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: colors.textPrimary,
+                            titleColor: '#fff',
+                            bodyColor: '#fff',
+                            borderColor: colors.border,
+                            borderWidth: 1,
+                            cornerRadius: 8,
+                            padding: 12
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                color: colors.textSecondary,
+                                font: {
+                                    family: 'Inter',
+                                    size: 12
+                                }
+                            }
+                        },
+                        y: {
+                            grid: {
+                                color: colors.border,
+                                borderDash: [5, 5]
+                            },
+                            ticks: {
+                                color: colors.textSecondary,
+                                font: {
+                                    family: 'Inter',
+                                    size: 12
+                                }
+                            }
+                        }
+                    },
+                    interaction: {
+                        intersect: false,
+                        mode: 'index'
+                    }
+                }
+            });
         }
-    });
-
-    // Product Stock Pie Chart
-    new Chart(document.getElementById('stockPieChart'), {
-        type: 'doughnut',
-        data: {
-            labels: stockLabels,
-            datasets: [{
-                data: stockData,
-                backgroundColor: [
-                    '#23272f', '#ffd700', '#e57373', '#3a3f47', '#adadad', '#f5bebe'
-                ],
-                borderWidth: 2
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: { position: 'bottom' }
-            }
+        
+        // Stock Distribution Doughnut Chart
+        if (document.getElementById('revenueChart')) {
+            new Chart(document.getElementById('revenueChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: stockLabels,
+                    datasets: [{
+                        data: stockData,
+                        backgroundColor: [
+                            colors.primary,
+                            colors.success,
+                            colors.warning,
+                            colors.danger,
+                            colors.textSecondary
+                        ],
+                        borderWidth: 0,
+                        hoverBorderWidth: 2,
+                        hoverBorderColor: '#fff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    aspectRatio: 1.5,
+                    cutout: '65%',
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 20,
+                                usePointStyle: true,
+                                pointStyle: 'circle',
+                                color: colors.textPrimary,
+                                font: {
+                                    family: 'Inter',
+                                    size: 12
+                                }
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: colors.textPrimary,
+                            titleColor: '#fff',
+                            bodyColor: '#fff',
+                            borderColor: colors.border,
+                            borderWidth: 1,
+                            cornerRadius: 8,
+                            padding: 12
+                        }
+                    },
+                    animation: {
+                        animateScale: true,
+                        animateRotate: true
+                    }
+                }
+            });
         }
     });
 </script>

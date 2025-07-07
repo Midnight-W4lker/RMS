@@ -3,32 +3,923 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Retail Management System</title>
+    <title>Core Eminance | Retail Management System</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:400,500,700&display=swap">
+    <link rel="stylesheet" href="{{ url_for('static', filename='variables.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='components.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='layout.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='pages.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='toast.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+      /* === CORE LAYOUT === */
+      .dashboard-layout {
+        display: flex;
+        min-height: 100vh;
+        background: var(--bg-primary);
+      }
+
+      /* === SIDEBAR COMPONENT === */
+      .sidebar {
+        background: var(--bg-surface);
+        border-right: 1px solid var(--color-border);
+        width: 16rem;
+        min-width: 16rem;
+        display: flex;
+        flex-direction: column;
+        box-shadow: var(--shadow-sm);
+        transition: all var(--transition-base);
+        z-index: 200;
+      }
+
+      .sidebar__brand {
+        display: flex;
+        align-items: center;
+        gap: var(--space-3);
+        font-size: var(--font-size-xl);
+        font-weight: var(--font-weight-bold);
+        padding: var(--space-6) var(--space-4);
+        color: var(--text-primary);
+        letter-spacing: var(--letter-spacing-tight);
+        border-bottom: 1px solid var(--color-border-light);
+      }
+
+      .sidebar__logo {
+        width: 2.5rem;
+        height: 2.5rem;
+        background: var(--accent);
+        border-radius: var(--radius-md);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.25rem;
+        box-shadow: var(--shadow-sm);
+      }
+
+      .sidebar__nav {
+        flex: 1;
+        padding: var(--space-4) 0;
+      }
+
+      .sidebar__link {
+        display: flex;
+        align-items: center;
+        gap: var(--space-3);
+        padding: var(--space-3) var(--space-4);
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-size: var(--font-size-sm);
+        font-weight: var(--font-weight-medium);
+        border-left: 3px solid transparent;
+        transition: all var(--transition-fast);
+        margin: 0 var(--space-2);
+        border-radius: var(--radius-sm);
+      }
+
+      .sidebar__link:hover {
+        background: var(--accent-light);
+        color: var(--text-primary);
+        transform: translateX(4px);
+        border-left-color: var(--accent);
+      }
+
+      .sidebar__link.active {
+        background: var(--accent-light);
+        color: var(--accent);
+        border-left-color: var(--accent);
+        font-weight: var(--font-weight-semibold);
+        transform: translateX(2px);
+      }
+
+      .sidebar__icon {
+        width: 1.25rem;
+        height: 1.25rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+      }
+
+      .sidebar__footer {
+        padding: var(--space-4);
+        border-top: 1px solid var(--color-border-light);
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-2);
+      }
+
+      /* Sidebar close button for mobile */
+      .sidebar__close-btn {
+        display: none;
+        position: absolute;
+        top: var(--space-4);
+        right: var(--space-4);
+        z-index: 1400;
+        background: var(--bg-surface);
+        border-radius: 50%;
+        box-shadow: var(--shadow-md);
+        border: none;
+        padding: var(--space-2);
+        color: var(--text-secondary);
+        transition: all var(--transition-fast);
+      }
+
+      .sidebar__close-btn:hover {
+        background: var(--color-danger-light);
+        color: var(--color-danger);
+      }
+
+      /* === MAIN CONTENT AREA === */
+      .main-content {
+        flex: 1;
+        background: var(--bg-primary);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* === DROPDOWN COMPONENT === */
+      .dropdown {
+        position: relative;
+      }
+
+      .dropdown-toggle {
+        background: var(--bg-surface);
+        border: 1px solid var(--color-border);
+        border-radius: 50%;
+        padding: var(--space-2);
+        color: var(--text-primary);
+        transition: all var(--transition-fast);
+        box-shadow: var(--shadow-xs);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .dropdown-toggle:hover,
+      .dropdown-toggle[aria-expanded="true"] {
+        background: var(--accent-light);
+        border-color: var(--accent);
+        color: var(--accent);
+        box-shadow: var(--shadow-sm);
+      }
+
+      .dropdown-menu {
+        display: none;
+        position: absolute;
+        right: 0;
+        top: calc(100% + var(--space-2));
+        min-width: 10rem;
+        background: var(--card-bg);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-lg);
+        z-index: 2000;
+        padding: var(--space-2);
+        opacity: 0;
+        transform: translateY(-8px);
+        transition: opacity var(--transition-base), transform var(--transition-base);
+      }
+
+      .dropdown-menu[style*="block"] {
+        display: block;
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .dropdown-item {
+        display: block;
+        width: 100%;
+        padding: var(--space-3);
+        color: var(--text-primary);
+        text-decoration: none;
+        border-radius: var(--radius-sm);
+        font-size: var(--font-size-sm);
+        font-weight: var(--font-weight-medium);
+        transition: all var(--transition-fast);
+      }
+
+      .dropdown-item:hover {
+        background: var(--accent-light);
+        color: var(--accent);
+      }
+
+      /* === REFACTORED THEME TOGGLE BUTTON - CHANGELOG v2.0 === */
+      /* CHANGELOG: Complete refactor with CSS-only color management and smooth transitions */
+      .theme-toggle {
+        /* Layout and structure */
+        background: var(--bg-surface);
+        border: 1px solid var(--color-border);
+        border-radius: 50%;
+        padding: var(--space-2);
+        width: 2.5rem;
+        height: 2.5rem;
+        
+        /* Visual styling with CSS variables */
+        color: var(--icon-color);
+        box-shadow: var(--shadow-xs);
+        
+        /* Smooth transitions for all properties */
+        transition: all var(--transition-base);
+        
+        /* Layout */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        cursor: pointer;
+        
+        /* Accessibility */
+        user-select: none;
+        -webkit-user-select: none;
+      }
+
+      /* Enhanced hover state with proper color theory */
+      .theme-toggle:hover {
+        background: var(--accent-light);
+        border-color: var(--accent);
+        color: var(--accent);
+        box-shadow: var(--shadow-sm);
+        transform: translateY(-1px) scale(1.05);
+      }
+
+      /* Accessibility focus state */
+      .theme-toggle:focus {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
+
+      /* Active state feedback */
+      .theme-toggle:active {
+        transform: translateY(0) scale(0.98);
+        box-shadow: var(--shadow-xs);
+      }
+
+      /* Icon positioning and transitions */
+      .theme-icon-dark,
+      .theme-icon-light {
+        position: absolute;
+        width: 1.125rem;
+        height: 1.125rem;
+        color: inherit; /* CHANGELOG: Inherit color from parent for consistency */
+        transition: all var(--transition-base);
+        transform-origin: center;
+      }
+
+      /* Enhanced theme icon animations with CSS-only state management */
+      .theme-toggle[aria-pressed="true"] .theme-icon-dark {
+        opacity: 0;
+        transform: rotate(180deg) scale(0.7);
+        pointer-events: none;
+      }
+
+      .theme-toggle[aria-pressed="true"] .theme-icon-light {
+        opacity: 1;
+        transform: rotate(0deg) scale(1);
+      }
+
+      .theme-toggle[aria-pressed="false"] .theme-icon-dark {
+        opacity: 1;
+        transform: rotate(0deg) scale(1);
+      }
+
+      .theme-toggle[aria-pressed="false"] .theme-icon-light {
+        opacity: 0;
+        transform: rotate(-180deg) scale(0.7);
+        pointer-events: none;
+      }
+
+      /* Global theme transition support */
+      /* CHANGELOG: Added smooth transitions for theme changes */
+      .theme-transitioning * {
+        transition: background-color var(--transition-base), 
+                   color var(--transition-base), 
+                   border-color var(--transition-base),
+                   box-shadow var(--transition-base) !important;
+      }
+
+      /* === ANIMATIONS === */
+      @keyframes fadeInScale {
+        from {
+          opacity: 0;
+          transform: scale(0.95) translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1) translateY(0);
+        }
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* === MOBILE RESPONSIVE === */
+      @media (max-width: 768px) {
+        .navbar__nav {
+          display: none;
+        }
+
+        .sidebar {
+          position: fixed;
+          left: 0;
+          top: 0;
+          bottom: 0;
+          width: 0;
+          min-width: 0;
+          max-width: 0;
+          height: 100vh;
+          z-index: 1300;
+          overflow-x: hidden;
+          border-right: none;
+        }
+
+        .sidebar.open {
+          width: 85vw;
+          max-width: 20rem;
+          border-right: 1px solid var(--color-border);
+        }
+
+        .sidebar__close-btn {
+          display: block;
+        }
+
+        .sidebar.open .sidebar__close-btn {
+          display: block;
+        }
+
+        #sidebar-mobile-toggle {
+          display: block;
+          position: fixed;
+          top: var(--space-4);
+          left: var(--space-4);
+          z-index: 1500;
+          background: var(--accent);
+          color: white;
+          border-radius: 50%;
+          padding: var(--space-3);
+          box-shadow: var(--shadow-lg);
+        }
+      }
+
+      @media (min-width: 769px) {
+        #sidebar-mobile-toggle {
+          display: none;
+        }
+      }
+
+      /* === FOOTER === */
+      .footer {
+        background: var(--bg-surface);
+        border-top: 1px solid var(--color-border);
+        color: var(--text-secondary);
+        padding: var(--space-6) 0;
+        text-align: center;
+        font-size: var(--font-size-sm);
+        margin-top: auto;
+      }
+
+      /* === UTILITY CLASSES === */
+      .visually-hidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+
+      /* === SKIP NAVIGATION LINK === */
+      .skip-nav {
+        position: absolute;
+        top: -40px;
+        left: 0;
+        width: 100%;
+        padding: var(--space-3);
+        background: var(--accent);
+        color: white;
+        text-align: center;
+        font-weight: var(--font-weight-bold);
+        transition: top var(--transition-fast);
+        z-index: 1000;
+      }
+
+      .skip-nav:focus {
+        top: 0;
+      }
+    </style>
 </head>
 <body>
-    <nav>
-        <h1>Retail Management</h1>
-        <div class="hamburger" id="hamburger-menu">
-            <span></span>
-            <span></span>
-            <span></span>
+    <!-- Skip Navigation for Accessibility -->
+    <a href="#main-content" class="skip-nav">Skip to main content</a>
+    
+    <div class="dashboard-layout">
+        <aside class="sidebar" aria-label="Main navigation">
+            <!-- Close button for mobile -->
+            <button class="sidebar__close-btn" aria-label="Close sidebar">
+                <span class="visually-hidden">Close sidebar</span>
+                <i data-lucide="x"></i>
+            </button>
+            
+            <!-- Brand Section -->
+            <div class="sidebar__brand">
+                <div class="sidebar__logo">
+                    <i data-lucide="shopping-cart"></i>
+                </div>
+                <span>Core Eminance</span>
+            </div>
+            
+            <!-- Navigation Links -->
+            <nav class="sidebar__nav">
+                <ul>
+                    <li><a href="{{ url_for('dashboard') }}" class="sidebar__link{% if request.endpoint == 'dashboard' %} active{% endif %}">
+                        <i data-lucide="layout-dashboard" class="sidebar__icon"></i>
+                        Dashboard
+                    </a></li>
+                    <li><a href="{{ url_for('list_products') }}" class="sidebar__link{% if request.endpoint == 'list_products' %} active{% endif %}">
+                        <i data-lucide="package" class="sidebar__icon"></i>
+                        Products
+                    </a></li>
+                    <li><a href="{{ url_for('process_sale') }}" class="sidebar__link{% if request.endpoint == 'process_sale' %} active{% endif %}">
+                        <i data-lucide="shopping-bag" class="sidebar__icon"></i>
+                        Orders
+                    </a></li>
+                    <li><a href="{{ url_for('list_customers') }}" class="sidebar__link{% if request.endpoint == 'list_customers' %} active{% endif %}">
+                        <i data-lucide="users" class="sidebar__icon"></i>
+                        Customers
+                    </a></li>
+                    <li><a href="{{ url_for('reports') }}" class="sidebar__link{% if request.endpoint == 'reports' %} active{% endif %}">
+                        <i data-lucide="bar-chart-3" class="sidebar__icon"></i>
+                        Reports
+                    </a></li>
+                    <li><a href="{{ url_for('settings') }}" class="sidebar__link{% if request.endpoint == 'settings' %} active{% endif %}">
+                        <i data-lucide="settings" class="sidebar__icon"></i>
+                        Settings
+                    </a></li>
+                </ul>
+            </nav>
+            
+            <!-- Footer Links -->
+            <div class="sidebar__footer">
+                <a href="{{ url_for('profile') }}" class="sidebar__link{% if request.endpoint == 'profile' %} active{% endif %}">
+                    <i data-lucide="user" class="sidebar__icon"></i>
+                    Profile
+                </a>
+                <a href="{{ url_for('login') }}" class="sidebar__link">
+                    <i data-lucide="log-in" class="sidebar__icon"></i>
+                    Login
+                </a>
+                <a href="{{ url_for('signup') }}" class="sidebar__link">
+                    <i data-lucide="user-plus" class="sidebar__icon"></i>
+                    Sign Up
+                </a>
+            </div>
+        </aside>
+        <div class="sidebar-overlay" id="sidebar-overlay"></div>
+        <div class="main-content">
+            <header class="navbar" role="banner">
+                <!-- Mobile Sidebar Toggle -->
+                <button id="sidebar-mobile-toggle" class="navbar__mobile-toggle" aria-label="Toggle sidebar menu" aria-expanded="false">
+                    <span class="visually-hidden">Toggle sidebar menu</span>
+                    <i data-lucide="menu" class="menu-icon"></i>
+                    <i data-lucide="x" class="close-icon" style="display: none;"></i>
+                </button>
+                
+                <!-- Brand/Logo -->
+                <div class="navbar__brand">
+                    <i data-lucide="layout-dashboard"></i>
+                    <span>Core Eminance</span>
+                </div>
+                
+                <!-- Main Navigation -->
+                <nav class="navbar__nav" id="navbar-nav" role="navigation">
+                    <ul>
+                        <li><a href="{{ url_for('dashboard') }}" class="navbar-link{% if request.endpoint == 'dashboard' %} active{% endif %}">
+                            <i data-lucide="layout-dashboard"></i>
+                            <span>Dashboard</span>
+                        </a></li>
+                        <li><a href="{{ url_for('reports') }}" class="navbar-link{% if request.endpoint == 'reports' %} active{% endif %}">
+                            <i data-lucide="bar-chart-3"></i>
+                            <span>Reports</span>
+                        </a></li>
+                        <li><a href="{{ url_for('settings') }}" class="navbar-link{% if request.endpoint == 'settings' %} active{% endif %}">
+                            <i data-lucide="settings"></i>
+                            <span>Settings</span>
+                        </a></li>
+                    </ul>
+                </nav>
+                
+                <!-- Action Buttons -->
+                <div class="navbar__actions">
+                    <!-- REFACTORED THEME TOGGLE - CHANGELOG v2.0 -->
+                    <!-- CHANGELOG: Enhanced ARIA attributes and accessibility -->
+                    <button id="theme-toggle-btn" 
+                            class="theme-toggle" 
+                            type="button"
+                            role="switch"
+                            aria-label="Toggle between light and dark themes"
+                            aria-pressed="false"
+                            aria-checked="false"
+                            tabindex="0">
+                        <i data-lucide="moon" class="theme-icon-dark" aria-hidden="true"></i>
+                        <i data-lucide="sun" class="theme-icon-light" aria-hidden="true"></i>
+                        <span class="visually-hidden">Switch color theme</span>
+                    </button>
+                    
+                    <!-- User Dropdown -->
+                    <div class="dropdown">
+                        <button class="dropdown-toggle user-avatar-btn" aria-haspopup="true" aria-expanded="false" aria-label="User menu">
+                            {% if current_user.is_authenticated and current_user.avatar_filename %}
+                                <img src="{{ url_for('static', filename='uploads/avatars/' + current_user.avatar_filename) }}" 
+                                     alt="Profile picture" class="navbar-avatar">
+                            {% else %}
+                                <i data-lucide="user"></i>
+                            {% endif %}
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            {% if current_user.is_authenticated %}
+                                <li class="dropdown-header">
+                                    <div class="user-info">
+                                        <div class="user-name">{{ current_user.username }}</div>
+                                        <div class="user-email">{{ current_user.email }}</div>
+                                    </div>
+                                </li>
+                                <li><hr style="margin: var(--space-2) 0; border: none; border-top: 1px solid var(--color-border);"></li>
+                                <li><a href="{{ url_for('profile') }}" class="dropdown-item" role="menuitem">
+                                    <i data-lucide="user"></i>
+                                    Profile
+                                </a></li>
+                                <li><a href="{{ url_for('settings') }}" class="dropdown-item" role="menuitem">
+                                    <i data-lucide="settings"></i>
+                                    Account Settings
+                                </a></li>
+                                <li><hr style="margin: var(--space-2) 0; border: none; border-top: 1px solid var(--color-border);"></li>
+                                <li><a href="{{ url_for('logout') }}" class="dropdown-item" role="menuitem">
+                                    <i data-lucide="log-out"></i>
+                                    Logout
+                                </a></li>
+                            {% else %}
+                                <li><a href="{{ url_for('login') }}" class="dropdown-item" role="menuitem">
+                                    <i data-lucide="log-in"></i>
+                                    Login
+                                </a></li>
+                                <li><a href="{{ url_for('signup') }}" class="dropdown-item" role="menuitem">
+                                    <i data-lucide="user-plus"></i>
+                                    Sign Up
+                                </a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+            </header>
+            <!-- Page Content -->
+            <main role="main" style="flex: 1; display: flex; flex-direction: column; min-height: 0;" id="main-content">
+                {% block content %}{% endblock %}
+            </main>
+            <footer class="footer">
+                <div>&copy; {{ current_year or 2025 }} Core Eminance &mdash; Retail Management System</div>
+            </footer>
         </div>
-        <ul id="nav-links">
-            <li><a href="{{ url_for('dashboard') }}">Home</a></li>
-            <li><a href="{{ url_for('add_product') }}">Add Product</a></li>
-            <li><a href="{{ url_for('list_products') }}">View Products</a></li>
-            <li><a href="{{ url_for('register_customer') }}">Register Customer</a></li>
-            <li><a href="{{ url_for('list_customers') }}">View Customers</a></li>
-            <li><a href="{{ url_for('process_sale') }}">Process Sale</a></li>
-            <li><a href="{{ url_for('reports') }}">Reports</a></li>
-        </ul>
-    </nav>
-    <main>
-        {% block content %}{% endblock %}
-    </main>
-    <script src="{{ url_for('static', filename='navbar.js') }}"></script>
+    </div>
+    <!-- CHANGELOG: Added new refactored theme system -->
+    <script src="{{ url_for('static', filename='theme-system.js') }}"></script>
+    <script src="{{ url_for('static', filename='ui-utils.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <script>
+    // Initialize Lucide icons after library loads
+    document.addEventListener('DOMContentLoaded', function() {
+        if (window.lucide) {
+            lucide.createIcons();
+        }
+    });
+    </script>
+    <script src="{{ url_for('static', filename='chart-manager.js') }}"></script>
+    <!-- <script src="{{ url_for('static', filename='navbar.js') }}"></script> -->
+    <!-- COMMENTED OUT: navbar.js conflicts with theme-system.js and duplicates inline dropdown functionality -->
     {% block scripts %}{% endblock %}
+    <script>
+    /**
+     * Modern SaaS Dashboard JavaScript
+     * Handles sidebar navigation, dropdown menus, and theme toggling
+     */
+    
+    // === SIDEBAR NAVIGATION ===
+    (function initSidebar() {
+      const sidebarToggle = document.getElementById('sidebar-mobile-toggle');
+      const sidebar = document.querySelector('.sidebar');
+      const sidebarOverlay = document.getElementById('sidebar-overlay');
+      const closeBtn = sidebar ? sidebar.querySelector('.sidebar__close-btn') : null;
+      
+      // Exit early if sidebar elements don't exist
+      if (!sidebar) return;
+      
+      function openSidebar() {
+        sidebar.classList.add('open');
+        if (sidebarOverlay) sidebarOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden'; // Prevent background scroll
+        if (sidebarToggle) {
+          sidebarToggle.setAttribute('aria-expanded', 'true');
+          // Toggle icons
+          const menuIcon = sidebarToggle.querySelector('.menu-icon');
+          const closeIcon = sidebarToggle.querySelector('.close-icon');
+          if (menuIcon && closeIcon) {
+            menuIcon.style.display = 'none';
+            closeIcon.style.display = 'block';
+          }
+        }
+      }
+      
+      function closeSidebar() {
+        sidebar.classList.remove('open');
+        if (sidebarOverlay) sidebarOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+        if (sidebarToggle) {
+          sidebarToggle.setAttribute('aria-expanded', 'false');
+          // Toggle icons
+          const menuIcon = sidebarToggle.querySelector('.menu-icon');
+          const closeIcon = sidebarToggle.querySelector('.close-icon');
+          if (menuIcon && closeIcon) {
+            menuIcon.style.display = 'block';
+            closeIcon.style.display = 'none';
+          }
+        }
+      }
+      
+      // Event listeners
+      if (sidebarToggle) {
+        sidebarToggle.addEventListener('click', function(e) {
+          e.stopPropagation();
+          openSidebar();
+        });
+      }
+      
+      if (closeBtn) {
+        closeBtn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          closeSidebar();
+        });
+      }
+      
+      // Close sidebar when clicking outside
+      document.addEventListener('click', function(e) {
+        if (sidebar && sidebar.classList.contains('open') && 
+            !sidebar.contains(e.target) && 
+            (!sidebarToggle || !sidebarToggle.contains(e.target))) {
+          closeSidebar();
+        }
+      });
+
+      // Close sidebar when clicking overlay
+      if (sidebarOverlay) {
+        sidebarOverlay.addEventListener('click', closeSidebar);
+      }
+      
+      // Handle keyboard navigation
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && sidebar && sidebar.classList.contains('open')) {
+          closeSidebar();
+          if (sidebarToggle) sidebarToggle.focus();
+        }
+      });
+      
+      // Responsive handling
+      function handleResize() {
+        if (window.innerWidth > 768) {
+          if (sidebar) closeSidebar();
+          if (sidebarToggle) sidebarToggle.style.display = 'none';
+        } else {
+          if (sidebarToggle) sidebarToggle.style.display = 'block';
+        }
+      }
+      
+      window.addEventListener('resize', handleResize);
+      handleResize(); // Initial call
+    })();
+    
+    // === DROPDOWN MENU ===
+    (function initDropdown() {
+      const dropdown = document.querySelector('.dropdown');
+      if (!dropdown) return;
+      
+      const toggle = dropdown.querySelector('.dropdown-toggle');
+      const menu = dropdown.querySelector('.dropdown-menu');
+      
+      function openDropdown() {
+        toggle.setAttribute('aria-expanded', 'true');
+        menu.style.display = 'block';
+        // Focus first menu item
+        const firstItem = menu.querySelector('.dropdown-item');
+        if (firstItem) firstItem.focus();
+      }
+      
+      function closeDropdown() {
+        toggle.setAttribute('aria-expanded', 'false');
+        menu.style.display = 'none';
+      }
+      
+      // Toggle dropdown
+      toggle.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const isOpen = toggle.getAttribute('aria-expanded') === 'true';
+        if (isOpen) {
+          closeDropdown();
+        } else {
+          openDropdown();
+        }
+      });
+      
+      // Close dropdown when clicking outside
+      document.addEventListener('click', function(e) {
+        // Defensive programming: ensure e.target exists and has necessary properties
+        if (!e || !e.target) return;
+        
+        try {
+          if (!dropdown.contains(e.target)) {
+            closeDropdown();
+          }
+        } catch (error) {
+          // Silently handle any DOM-related errors from extensions
+          console.debug('Dropdown click handler error:', error);
+        }
+      });
+      
+      // Keyboard navigation for dropdown
+      dropdown.addEventListener('keydown', function(e) {
+        const items = menu.querySelectorAll('.dropdown-item');
+        const currentIndex = Array.from(items).indexOf(document.activeElement);
+        
+        switch (e.key) {
+          case 'Escape':
+            closeDropdown();
+            toggle.focus();
+            break;
+          case 'ArrowDown':
+            e.preventDefault();
+            const nextIndex = currentIndex < items.length - 1 ? currentIndex + 1 : 0;
+            items[nextIndex].focus();
+            break;
+          case 'ArrowUp':
+            e.preventDefault();
+            const prevIndex = currentIndex > 0 ? currentIndex - 1 : items.length - 1;
+            items[prevIndex].focus();
+            break;
+          case 'Enter':
+          case ' ':
+            if (document.activeElement.classList.contains('dropdown-item')) {
+              document.activeElement.click();
+            }
+            break;
+        }
+      });
+    })();
+    
+    // === ENHANCED MICROINTERACTIONS ===
+    (function initMicrointeractions() {
+      // Button ripple effect
+      function createRipple(event) {
+        // Defensive programming: ensure event and target exist
+        if (!event || !event.currentTarget) return;
+        
+        try {
+          const button = event.currentTarget;
+          const circle = document.createElement('span');
+          const diameter = Math.max(button.clientWidth, button.clientHeight);
+          const radius = diameter / 2;
+          
+          const rect = button.getBoundingClientRect();
+          circle.style.width = circle.style.height = diameter + 'px';
+          circle.style.left = (event.clientX - rect.left - radius) + 'px';
+          circle.style.top = (event.clientY - rect.top - radius) + 'px';
+          circle.classList.add('btn__ripple');
+          
+          const ripple = button.querySelector('.btn__ripple');
+          if (ripple) {
+            ripple.remove();
+          }
+          
+          button.appendChild(circle);
+          
+          // Remove ripple after animation
+          setTimeout(() => {
+            if (circle.parentNode) {
+              circle.parentNode.removeChild(circle);
+            }
+          }, 600);
+        } catch (error) {
+          // Silently handle any errors to prevent breaking the UI
+          console.debug('Ripple effect error:', error);
+        }
+      }
+      
+      // Add ripple to all buttons with error handling
+      try {
+        document.querySelectorAll('.btn, .btn--primary, .btn--secondary, .btn--success, .btn--danger').forEach(button => {
+          if (button && typeof button.addEventListener === 'function') {
+            button.addEventListener('click', createRipple);
+          }
+        });
+      } catch (error) {
+        console.debug('Button ripple initialization error:', error);
+      }
+      
+      // Enhanced card hover effects with error handling
+      try {
+        document.querySelectorAll('.dashboard-card').forEach(card => {
+          if (!card || typeof card.addEventListener !== 'function') return;
+          
+          card.addEventListener('mouseenter', function() {
+            if (this && this.style) {
+              this.style.transform = 'scale(1.02) translateY(-2px)';
+            }
+          });
+          
+          card.addEventListener('mouseleave', function() {
+            if (this && this.style) {
+              this.style.transform = '';
+            }
+          });
+        });
+      } catch (error) {
+        console.debug('Card hover effects initialization error:', error);
+      }
+      
+      // Smooth scrolling for anchor links
+      try {
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+          if (!anchor || typeof anchor.addEventListener !== 'function') return;
+          
+          anchor.addEventListener('click', function (e) {
+            if (!e || typeof e.preventDefault !== 'function') return;
+            
+            e.preventDefault();
+            const href = this.getAttribute('href');
+            if (href && href.startsWith('#')) {
+              const target = document.querySelector(href);
+              if (target && typeof target.scrollIntoView === 'function') {
+                target.scrollIntoView({
+                  behavior: 'smooth',
+                  block: 'start'
+                });
+              }
+            }
+          });
+        });
+      } catch (error) {
+        console.debug('Smooth scrolling initialization error:', error);
+      }
+    })();
+    
+    // === GLOBAL ERROR HANDLING ===
+    (function initErrorHandling() {
+      // Prevent unhandled errors from breaking the UI
+      window.addEventListener('error', function(e) {
+        // Only log in development mode, fail silently in production
+        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+          console.error('Global JavaScript error:', e.error || e.message);
+        }
+        return true; // Prevent default browser error handling
+      });
+      
+      // Handle unhandled promise rejections
+      window.addEventListener('unhandledrejection', function(e) {
+        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+          console.error('Unhandled promise rejection:', e.reason);
+        }
+        e.preventDefault(); // Prevent default browser handling
+      });
+      
+      // Defensive DOM manipulation helper
+      window.safeQuerySelector = function(selector) {
+        try {
+          return document.querySelector(selector);
+        } catch (error) {
+          console.debug('Query selector error:', error);
+          return null;
+        }
+      };
+      
+      window.safeQuerySelectorAll = function(selector) {
+        try {
+          return document.querySelectorAll(selector);
+        } catch (error) {
+          console.debug('Query selector all error:', error);
+          return [];
+        }
+      };
+    })();
+    
+    </script>
 </body>
 </html>

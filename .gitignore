@@ -24,5 +24,3 @@ instance/
 .DS_Store
 Thumbs.db
 
-# Seed data files
-seed_data.py

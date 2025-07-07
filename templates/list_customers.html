@@ -1,39 +1,56 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container">
-    {% if page_title %}
-        <h1 class="form-title">{{ page_title }}</h1>
-    {% endif %}
-    {% if description %}
-        <div class="description-box">
-            <p>{{ description }}</p>
+<main class="container" style="padding: var(--space-8) 0;">
+    <div class="dashboard-card card" style="padding: var(--space-6);">
+        {% if page_title %}
+            <div class="card__title" style="font-size: var(--font-size-xl); font-weight: var(--font-weight-bold); color: var(--color-primary); margin-bottom: var(--space-4);">{{ page_title }}</div>
+        {% endif %}
+        {% if description %}
+            <div class="mb-3" style="color: var(--color-text-secondary); margin-bottom: var(--space-3);">{{ description }}</div>
+        {% endif %}
+        <div class="card__content">
+            <div class="flex items-center justify-between mb-2">
+                <h2 class="card__title" style="font-size: var(--font-size-lg); font-weight: var(--font-weight-semibold); color: var(--color-primary); margin-bottom: var(--space-4);">Customers</h2>
+                <a href="{{ url_for('register_customer') }}" class="btn btn--primary btn--small">Add Customer</a>
+            </div>
+            <form method="GET" class="form-group" style="margin-bottom: var(--space-4);">
+                <input type="text" id="search" name="search" class="form-control" placeholder=" " value="{{ request.args.get('search', '') }}" />
+                <label for="search" class="form-label">Search customers...</label>
+            </form>
+            <div class="overflow-x-auto" style="position:relative; max-height: 340px; overflow-y: auto;">
+                <table class="table" id="customers-table" style="width:100%; border-radius: var(--radius-lg); overflow: hidden; background: var(--color-surface); box-shadow: var(--shadow-xs);">
+                    <thead style="background: var(--color-bg-alt); color: var(--color-text-primary);">
+                        <tr>
+                            <th>Customer ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for customer in customers %}
+                        <tr style="border-bottom: 1px solid var(--color-border);">
+                            <td>{{ customer.customer_id }}</td>
+                            <td>{{ customer.name }}</td>
+                            <td>{{ customer.email }}</td>
+                            <td>
+                                <a href="{{ url_for('update_customer', customer_id=customer.customer_id) }}" class="btn btn--secondary btn--small">Update</a>
+                                <a href="{{ url_for('delete_customer', customer_id=customer.customer_id) }}" class="btn btn--danger btn--small" onclick="return confirm('Delete this customer?')">Delete</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
-    {% endif %}
-    <h2>Customers</h2>
-    <div class="table-responsive">
-        <table>
-            <thead class="table-header">
-                <tr>
-                    <th>Customer ID</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for customer in customers %}
-                <tr>
-                    <td>{{ customer.customer_id }}</td>
-                    <td>{{ customer.name }}</td>
-                    <td>{{ customer.email }}</td>
-                    <td>
-                        <a href="{{ url_for('update_customer', customer_id=customer.customer_id) }}">Update</a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
     </div>
-</div>
+</main>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Re-animate table rows after filtering or update
+if (window.animateTableRows) animateTableRows('#customers-table');
+</script>
 {% endblock %}
