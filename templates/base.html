@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='layout.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='pages.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='toast.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='error-system.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <style>
       /* === CORE LAYOUT === */
@@ -595,6 +596,7 @@
     <!-- CHANGELOG: Added new refactored theme system -->
     <script src="{{ url_for('static', filename='theme-system.js') }}"></script>
     <script src="{{ url_for('static', filename='ui-utils.js') }}"></script>
+    <script src="{{ url_for('static', filename='alert-system.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
     <script>
@@ -918,6 +920,29 @@
           return [];
         }
       };
+    })();
+
+    // === FLASK FLASH MESSAGE INTEGRATION ===
+    (function initFlashMessages() {
+      // Handle Flask flash messages through the error system
+      document.addEventListener('DOMContentLoaded', function() {
+        // Check if ErrorManager is available
+        if (typeof window.ErrorManager === 'undefined') {
+          console.warn('ErrorManager not available for flash messages');
+          return;
+        }
+
+        // Get flash messages from Flask template
+        {% if get_flashed_messages(with_categories=true) %}
+        const flashMessages = {{ get_flashed_messages(with_categories=true) | tojson }};
+        
+        if (flashMessages && flashMessages.length > 0) {
+          // Show flash messages through error system
+          window.ErrorManager.showFlashMessages(flashMessages);
+          console.log('📨 Displayed', flashMessages.length, 'flash messages');
+        }
+        {% endif %}
+      });
     })();
     
     </script>

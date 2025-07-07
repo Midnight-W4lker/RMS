@@ -695,3 +695,44 @@ def test_charts():
 def test_responsive():
     """Test page for responsive navbar and sidebar layout"""
     return render_template("responsive_test.html")
+
+
+@app.route('/error-demo')
+def error_demo():
+    """Demo page for error display system"""
+    return render_template('error_demo.html')
+
+@app.route('/test-flash/<type>', methods=['POST'])
+def test_flash(type):
+    """Test Flask flash messages"""
+    messages = {
+        'error': 'This is a test error message from Flask flash!',
+        'warning': 'This is a test warning message from Flask flash!',
+        'success': 'This is a test success message from Flask flash!',
+        'info': 'This is a test info message from Flask flash!'
+    }
+    
+    message = messages.get(type, 'Unknown message type')
+    flash(message, type)
+    
+    return redirect(url_for('error_demo'))
+
+# Error Handlers
+@app.errorhandler(404)
+def not_found_error(error):
+    """Handle 404 errors gracefully"""
+    flash("The requested page was not found.", "warning")
+    return render_template('dashboard.html'), 404
+
+@app.errorhandler(500)
+def internal_error(error):
+    """Handle 500 errors gracefully"""
+    db.session.rollback()
+    flash("An internal server error occurred. Please try again.", "error")
+    return render_template('dashboard.html'), 500
+
+@app.errorhandler(403)
+def forbidden_error(error):
+    """Handle 403 errors gracefully"""
+    flash("You don't have permission to access this resource.", "warning")
+    return render_template('dashboard.html'), 403

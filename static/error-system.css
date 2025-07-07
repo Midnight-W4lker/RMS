@@ -1,0 +1,285 @@
+/* ============================================================================
+   ERROR DISPLAY SYSTEM
+   Modern, accessible error and alert management
+   ============================================================================ */
+
+/* Error Banner Container */
+.error-banner-container {
+  position: fixed;
+  top: var(--space-4);
+  right: var(--space-4);
+  z-index: 2000;
+  max-width: 400px;
+  width: 100%;
+  pointer-events: none;
+}
+
+/* Individual Error Banner */
+.error-banner {
+  background: var(--error-banner-bg);
+  border: 1px solid var(--error-banner-border);
+  border-left: 4px solid var(--color-danger);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  margin-bottom: var(--space-3);
+  box-shadow: var(--shadow-lg);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  pointer-events: auto;
+  transform: translateX(100%);
+  opacity: 0;
+  transition: all var(--transition-base);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Banner Animation States */
+.error-banner.show {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.error-banner.hide {
+  transform: translateX(100%);
+  opacity: 0;
+  margin-bottom: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  border-width: 0;
+}
+
+/* Banner Types */
+.error-banner.type-error {
+  border-left-color: var(--color-danger);
+  background: var(--error-banner-bg);
+}
+
+.error-banner.type-warning {
+  border-left-color: var(--color-warning);
+  background: var(--warning-banner-bg);
+}
+
+.error-banner.type-success {
+  border-left-color: var(--color-success);
+  background: var(--success-banner-bg);
+}
+
+.error-banner.type-info {
+  border-left-color: var(--accent);
+  background: var(--info-banner-bg);
+}
+
+/* Banner Header */
+.error-banner__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-2);
+}
+
+.error-banner__icon {
+  flex-shrink: 0;
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-top: 2px;
+}
+
+.error-banner.type-error .error-banner__icon {
+  color: var(--color-danger);
+}
+
+.error-banner.type-warning .error-banner__icon {
+  color: var(--color-warning);
+}
+
+.error-banner.type-success .error-banner__icon {
+  color: var(--color-success);
+}
+
+.error-banner.type-info .error-banner__icon {
+  color: var(--accent);
+}
+
+/* Banner Title */
+.error-banner__title {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  margin: 0;
+  line-height: var(--line-height-tight);
+}
+
+/* Banner Message */
+.error-banner__message {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: var(--line-height-base);
+  word-wrap: break-word;
+}
+
+/* Close Button */
+.error-banner__close {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: var(--space-1);
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+  width: 1.5rem;
+  height: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: -2px;
+  margin-right: -2px;
+}
+
+.error-banner__close:hover {
+  background: var(--error-close-hover-bg);
+  color: var(--text-primary);
+  transform: scale(1.1);
+}
+
+.error-banner__close:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Progress Bar (for auto-dismiss) */
+.error-banner__progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  background: var(--error-progress-bg);
+  transition: width linear;
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+}
+
+.error-banner.type-error .error-banner__progress {
+  background: var(--color-danger);
+}
+
+.error-banner.type-warning .error-banner__progress {
+  background: var(--color-warning);
+}
+
+.error-banner.type-success .error-banner__progress {
+  background: var(--color-success);
+}
+
+.error-banner.type-info .error-banner__progress {
+  background: var(--accent);
+}
+
+/* Mobile Responsive */
+@media (max-width: 640px) {
+  .error-banner-container {
+    top: var(--space-3);
+    right: var(--space-3);
+    left: var(--space-3);
+    max-width: none;
+  }
+
+  .error-banner {
+    padding: var(--space-3);
+    margin-bottom: var(--space-2);
+  }
+
+  .error-banner__header {
+    gap: var(--space-2);
+  }
+
+  .error-banner__title {
+    font-size: var(--font-size-xs);
+  }
+
+  .error-banner__message {
+    font-size: var(--font-size-xs);
+  }
+}
+
+/* Accessibility Improvements */
+@media (prefers-reduced-motion: reduce) {
+  .error-banner {
+    transition: opacity var(--transition-fast);
+    transform: none;
+  }
+
+  .error-banner.show {
+    transform: none;
+  }
+
+  .error-banner.hide {
+    transform: none;
+  }
+
+  .error-banner__progress {
+    transition: none;
+  }
+}
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+  .error-banner {
+    border-width: 2px;
+    border-left-width: 6px;
+  }
+
+  .error-banner__title {
+    font-weight: var(--font-weight-bold);
+  }
+}
+
+/* Loading/Skeleton State */
+.error-banner.loading {
+  pointer-events: none;
+}
+
+.error-banner.loading .error-banner__message {
+  background: var(--skeleton-bg);
+  border-radius: var(--radius-sm);
+  color: transparent;
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes skeleton-pulse {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+/* Stacking Animation */
+.error-banner-container .error-banner:not(:last-child) {
+  margin-bottom: var(--space-2);
+  transform: scale(0.98);
+  opacity: 0.9;
+}
+
+.error-banner-container .error-banner:not(:last-child):hover {
+  transform: scale(1);
+  opacity: 1;
+  z-index: 10;
+}
+
+/* Compact Mode (for multiple alerts) */
+.error-banner-container.compact .error-banner {
+  padding: var(--space-2) var(--space-3);
+  margin-bottom: var(--space-1);
+}
+
+.error-banner-container.compact .error-banner__header {
+  margin-bottom: var(--space-1);
+}
+
+.error-banner-container.compact .error-banner__title,
+.error-banner-container.compact .error-banner__message {
+  font-size: var(--font-size-xs);
+}

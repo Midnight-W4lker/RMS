@@ -1,0 +1,229 @@
+{% extends "base.html" %}
+
+{% block title %}Error System Demo{% endblock %}
+
+{% block content %}
+<div class="container py-6">
+    <div class="max-w-4xl mx-auto">
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-primary mb-2">Error Display System Demo</h1>
+            <p class="text-secondary">Test the comprehensive error and alert management system with various message types and scenarios.</p>
+        </div>
+
+        <!-- Test Controls -->
+        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <!-- Basic Alert Types -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="font-semibold">Basic Alert Types</h3>
+                </div>
+                <div class="card-content space-y-3">
+                    <button onclick="showError('Error Test', 'This is a test error message to demonstrate error alerts.')" 
+                            class="btn btn-danger btn-sm w-full">
+                        Show Error
+                    </button>
+                    <button onclick="showWarning('Warning Test', 'This is a test warning message to demonstrate warning alerts.')" 
+                            class="btn btn-warning btn-sm w-full">
+                        Show Warning
+                    </button>
+                    <button onclick="showSuccess('Success Test', 'This is a test success message to demonstrate success alerts.')" 
+                            class="btn btn-success btn-sm w-full">
+                        Show Success
+                    </button>
+                    <button onclick="showInfo('Info Test', 'This is a test info message to demonstrate info alerts.')" 
+                            class="btn btn-primary btn-sm w-full">
+                        Show Info
+                    </button>
+                </div>
+            </div>
+
+            <!-- Advanced Features -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="font-semibold">Advanced Features</h3>
+                </div>
+                <div class="card-content space-y-3">
+                    <button onclick="testPersistentAlert()" 
+                            class="btn btn-secondary btn-sm w-full">
+                        Persistent Alert
+                    </button>
+                    <button onclick="testMultipleAlerts()" 
+                            class="btn btn-secondary btn-sm w-full">
+                        Multiple Alerts
+                    </button>
+                    <button onclick="testLongMessage()" 
+                            class="btn btn-secondary btn-sm w-full">
+                        Long Message
+                    </button>
+                    <button onclick="testDuplicateHandling()" 
+                            class="btn btn-secondary btn-sm w-full">
+                        Duplicate Handling
+                    </button>
+                </div>
+            </div>
+
+            <!-- System Testing -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="font-semibold">System Testing</h3>
+                </div>
+                <div class="card-content space-y-3">
+                    <button onclick="triggerJSError()" 
+                            class="btn btn-outline btn-sm w-full">
+                        Trigger JS Error
+                    </button>
+                    <button onclick="triggerNetworkError()" 
+                            class="btn btn-outline btn-sm w-full">
+                        Network Error
+                    </button>
+                    <button onclick="window.ErrorManager.dismissAll()" 
+                            class="btn btn-ghost btn-sm w-full">
+                        Dismiss All
+                    </button>
+                    <button onclick="exportLogs()" 
+                            class="btn btn-ghost btn-sm w-full">
+                        Export Logs
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Flask Flash Message Testing -->
+        <div class="card mt-6">
+            <div class="card-header">
+                <h3 class="font-semibold">Flask Flash Message Testing</h3>
+            </div>
+            <div class="card-content">
+                <div class="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
+                    <form method="POST" action="{{ url_for('test_flash', type='error') }}" class="inline">
+                        <button type="submit" class="btn btn-danger btn-sm w-full">
+                            Flash Error
+                        </button>
+                    </form>
+                    <form method="POST" action="{{ url_for('test_flash', type='warning') }}" class="inline">
+                        <button type="submit" class="btn btn-warning btn-sm w-full">
+                            Flash Warning
+                        </button>
+                    </form>
+                    <form method="POST" action="{{ url_for('test_flash', type='success') }}" class="inline">
+                        <button type="submit" class="btn btn-success btn-sm w-full">
+                            Flash Success
+                        </button>
+                    </form>
+                    <form method="POST" action="{{ url_for('test_flash', type='info') }}" class="inline">
+                        <button type="submit" class="btn btn-primary btn-sm w-full">
+                            Flash Info
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- System Information -->
+        <div class="card mt-6">
+            <div class="card-header">
+                <h3 class="font-semibold">System Information</h3>
+            </div>
+            <div class="card-content">
+                <div class="grid gap-4 md:grid-cols-2">
+                    <div>
+                        <h4 class="font-medium mb-2">Features</h4>
+                        <ul class="text-sm text-secondary space-y-1">
+                            <li>✅ Multiple alert types (error, warning, success, info)</li>
+                            <li>✅ Auto-dismiss with progress bar</li>
+                            <li>✅ Persistent alerts option</li>
+                            <li>✅ Duplicate message handling</li>
+                            <li>✅ Keyboard shortcuts (Escape to dismiss)</li>
+                            <li>✅ Mobile responsive design</li>
+                            <li>✅ Theme-aware styling</li>
+                            <li>✅ Accessibility (ARIA, screen readers)</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-medium mb-2">Keyboard Shortcuts</h4>
+                        <ul class="text-sm text-secondary space-y-1">
+                            <li><kbd>Escape</kbd> - Dismiss focused alert</li>
+                            <li><kbd>Ctrl+Shift+D</kbd> - Dismiss all alerts</li>
+                        </ul>
+                        
+                        <h4 class="font-medium mb-2 mt-4">Logging</h4>
+                        <ul class="text-sm text-secondary space-y-1">
+                            <li>All alerts logged to console</li>
+                            <li>Internal log storage (last 100 entries)</li>
+                            <li>Export logs as JSON</li>
+                            <li>Automatic error tracking</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Test Functions for Error System Demo
+function testPersistentAlert() {
+    window.ErrorManager.error(
+        'Persistent Alert', 
+        'This alert will not auto-dismiss. Click the X to close it.',
+        { persistent: true }
+    );
+}
+
+function testMultipleAlerts() {
+    const types = ['error', 'warning', 'success', 'info'];
+    types.forEach((type, index) => {
+        setTimeout(() => {
+            window.ErrorManager[type](
+                `${type.charAt(0).toUpperCase() + type.slice(1)} Alert ${index + 1}`,
+                `This is test ${type} message number ${index + 1}.`
+            );
+        }, index * 500);
+    });
+}
+
+function testLongMessage() {
+    window.ErrorManager.warning(
+        'Long Message Test',
+        'This is a very long message that tests how the alert system handles extensive text content. It should wrap properly and maintain good readability while not breaking the layout. The message can contain multiple sentences and should display clearly in both light and dark themes.'
+    );
+}
+
+function testDuplicateHandling() {
+    // Send same message twice - should refresh instead of duplicate
+    window.ErrorManager.info('Duplicate Test', 'This message will refresh if sent again.');
+    setTimeout(() => {
+        window.ErrorManager.info('Duplicate Test', 'This message will refresh if sent again.');
+    }, 1000);
+}
+
+function triggerJSError() {
+    // Trigger a JavaScript error to test global error handling
+    setTimeout(() => {
+        nonExistentFunction();
+    }, 100);
+}
+
+function triggerNetworkError() {
+    // Trigger a network error to test fetch error handling
+    fetch('/nonexistent-endpoint')
+        .catch(error => {
+            console.log('Network error triggered:', error);
+        });
+}
+
+function exportLogs() {
+    if (window.ErrorManager) {
+        window.ErrorManager.exportLogs();
+    }
+}
+
+// Demo helper to show current log count
+setInterval(() => {
+    if (window.ErrorManager) {
+        const logCount = window.ErrorManager.getLogs().length;
+        console.log(`📊 Current log entries: ${logCount}`);
+    }
+}, 10000);
+</script>
+{% endblock %}

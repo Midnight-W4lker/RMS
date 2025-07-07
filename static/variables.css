@@ -99,6 +99,16 @@
   --toggle-background: #f3f4f6;
   --toggle-border: #d1d5db;
   --toggle-active: var(--accent);
+  
+  /* Error & Alert System */
+  --error-banner-bg: rgba(255, 255, 255, 0.95);
+  --error-banner-border: #fecaca;
+  --warning-banner-bg: rgba(255, 255, 255, 0.95);
+  --success-banner-bg: rgba(255, 255, 255, 0.95);
+  --info-banner-bg: rgba(255, 255, 255, 0.95);
+  --error-close-hover-bg: rgba(220, 38, 38, 0.1);
+  --error-progress-bg: rgba(220, 38, 38, 0.2);
+  --skeleton-bg: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.04), transparent);
 }
 
 [data-theme="dark"] {
@@ -158,6 +168,16 @@
   --toggle-background: #374151;
   --toggle-border: #4b5563;
   --toggle-active: var(--accent);
+  
+  /* Error & Alert System - Dark Mode */
+  --error-banner-bg: rgba(17, 17, 17, 0.95);
+  --error-banner-border: #7f1d1d;
+  --warning-banner-bg: rgba(17, 17, 17, 0.95);
+  --success-banner-bg: rgba(17, 17, 17, 0.95);
+  --info-banner-bg: rgba(17, 17, 17, 0.95);
+  --error-close-hover-bg: rgba(248, 113, 113, 0.1);
+  --error-progress-bg: rgba(248, 113, 113, 0.2);
+  --skeleton-bg: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.04), transparent);
 }
 
 html {
